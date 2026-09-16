@@ -4,7 +4,6 @@
 
 teleSynthAudioProcessorEditor::teleSynthAudioProcessorEditor (teleSynthAudioProcessor& p): AudioProcessorEditor (&p), audioProcessor (p){
     
-    touchToDraggable.fill(-1);
 }
 
 teleSynthAudioProcessorEditor::~teleSynthAudioProcessorEditor(){

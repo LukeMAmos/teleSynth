@@ -43,15 +43,11 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     //==============================================================================
     
-    ContinousSynth& getSynth(int index) { return Synth[index]; }
+
 
     
 private:
     
-    juce::dsp::Oscillator<float> testOsc;
-    
-    static constexpr int numVoices = 5;
-    ContinousSynth Synth[numVoices];
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessor)
 };

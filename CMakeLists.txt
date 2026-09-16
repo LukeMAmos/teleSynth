@@ -58,6 +58,8 @@ target_sources(teleSynth
     Source/PluginProcessor.h
     Source/PluginEditor.cpp
     Source/PluginEditor.h
+    Source/UI/DraggableComponent/DraggableComponent.h
+    Source/UI/DraggableComponent/DraggableComponent.cpp
 
 )
 
@@ -71,6 +73,11 @@ source_group("Source" FILES
     Source/PluginEditor.h
 )
 
+
+source_group("Source\\UI\\DraggableComponent" FILES 
+    Source/UI/DraggableComponent/DraggableComponent.h
+    Source/UI/DraggableComponent/DraggableComponent.cpp
+)
 
 target_compile_definitions(teleSynth
     PRIVATE
