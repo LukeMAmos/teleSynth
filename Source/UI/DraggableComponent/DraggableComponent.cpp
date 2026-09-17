@@ -14,25 +14,6 @@ void DraggableComponent::paint(juce::Graphics &g){
     g.fillEllipse(0, 0, diameter, diameter);
 }
 
-void DraggableComponent::mouseDown(const juce::MouseEvent &event){
-    
-    dragger.startDraggingComponent(this, event);
-
-    
-}
-
-void DraggableComponent::mouseDrag(const juce::MouseEvent &event){
-    
-    dragger.dragComponent(this, event, &constrainer);
-
-}
-
-void DraggableComponent::mouseUp(const juce::MouseEvent &event){
-
-    
-}
-
-
 void DraggableComponent::resized(){
 
 }

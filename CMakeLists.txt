@@ -62,7 +62,8 @@ target_sources(teleSynth
     Source/UI/DraggableComponent/DraggableComponent.cpp
     Source/UI/DraggableComponent/DraggableZone.h
     Source/UI/DraggableComponent/DraggableZone.cpp
-
+    Source/UI/Sliders/Slider.h
+    Source/UI/Sliders/Slider.cpp
 )
 
 
@@ -81,6 +82,11 @@ source_group("Source\\UI\\DraggableComponent" FILES
     Source/UI/DraggableComponent/DraggableComponent.cpp
     Source/UI/DraggableComponent/DraggableZone.h
     Source/UI/DraggableComponent/DraggableZone.cpp
+)
+
+source_group("Source\\UI\\Sliders" FILES 
+    Source/UI/Sliders/Slider.h
+    Source/UI/Sliders/Slider.cpp
 )
 
 target_compile_definitions(teleSynth
