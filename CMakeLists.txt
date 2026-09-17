@@ -52,6 +52,11 @@ endif()
 
 juce_generate_juce_header(teleSynth)
 
+target_include_directories(teleSynth PRIVATE 
+    Source
+    Source/UI
+)
+
 target_sources(teleSynth
     PRIVATE
     Source/PluginProcessor.cpp
