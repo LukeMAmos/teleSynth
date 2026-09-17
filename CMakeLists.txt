@@ -64,6 +64,9 @@ target_sources(teleSynth
     Source/UI/DraggableComponent/DraggableZone.cpp
     Source/UI/Sliders/Slider.h
     Source/UI/Sliders/Slider.cpp
+    Source/UI/Buttons/SwitchScreen.h
+    Source/UI/Buttons/SwitchScreen.cpp
+    Source/UI/ThemeColours.h
 )
 
 
@@ -87,6 +90,15 @@ source_group("Source\\UI\\DraggableComponent" FILES
 source_group("Source\\UI\\Sliders" FILES 
     Source/UI/Sliders/Slider.h
     Source/UI/Sliders/Slider.cpp
+)
+
+source_group("Source\\UI\\Buttons" FILES 
+    Source/UI/Buttons/SwitchScreen.h
+    Source/UI/Buttons/SwitchScreen.cpp
+)
+
+source_group("Source\\UI" FILES 
+    Source/UI/ThemeColours.h
 )
 
 target_compile_definitions(teleSynth
