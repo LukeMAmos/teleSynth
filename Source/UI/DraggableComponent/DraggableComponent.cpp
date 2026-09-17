@@ -23,7 +23,7 @@ void DraggableComponent::mouseDown(const juce::MouseEvent &event){
 
 void DraggableComponent::mouseDrag(const juce::MouseEvent &event){
     
-    dragger.dragComponent(this, event, nullptr);
+    dragger.dragComponent(this, event, &constrainer);
 
 }
 
@@ -63,6 +63,6 @@ void DraggableComponent::setEndFunction(std::function<void()> function){
 
 void DraggableComponent::setXYBounds(juce::Rectangle<int> bounds){
     
-    
+    constrainer.setBoundsForComponent(this, bounds, false, false, false, false);
     
 }

@@ -43,6 +43,7 @@ private:
     float diameter = 100;
     
     juce::ComponentDragger dragger;
+    juce::ComponentBoundsConstrainer constrainer; 
     
     //Functions to call
     std::function<void(float xpos,float ypos)> onDragStart;
