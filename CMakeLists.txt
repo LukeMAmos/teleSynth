@@ -74,6 +74,8 @@ target_sources(teleSynth
     Source/UI/ThemeColours.h
     Source/Synth/Synthesiser.h
     Source/Synth/Synthesiser.cpp
+    Source/Synth/SynthesiserVoice.h
+    Source/Synth/SynthesiserVoice.cpp
 )
 
 
@@ -111,6 +113,8 @@ source_group("Source\\UI" FILES
 source_group("Source\\Synth" FILES 
     Source/Synth/Synthesiser.h
     Source/Synth/Synthesiser.cpp
+    Source/Synth/SynthesiserVoice.h
+    Source/Synth/SynthesiserVoice.cpp
 )
 
 

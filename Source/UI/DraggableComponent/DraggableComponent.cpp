@@ -11,7 +11,7 @@ void DraggableComponent::paint(juce::Graphics &g){
     g.setColour (ThemeColours::orange());
     g.fillEllipse(0, 0, diameter, diameter);
     g.setColour (ThemeColours::black());
-    g.fillEllipse(0, 0, diameter-4, diameter-4);
+    g.fillEllipse(4 ,4, diameter-8, diameter-8);
 }
 
 void DraggableComponent::resized(){
