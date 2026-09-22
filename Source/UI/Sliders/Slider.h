@@ -1,10 +1,10 @@
 #include <juce_gui_basics/juce_gui_basics.h>
  
-class Slider : public juce::Slider{
+class DotSlider : public juce::Slider{
 
 public:
     
-    Slider();
+    DotSlider();
     //Override Paint function
     void paint(juce::Graphics &g) override;
     

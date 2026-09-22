@@ -29,7 +29,7 @@ juce_add_plugin(teleSynth
     PLUGIN_MANUFACTURER_CODE    Lkam
     PLUGIN_CODE                 tesy
     FORMATS                      ${teleSynth_FORMATS}
-    PRODUCT_NAME                "iPhone Audio"
+    PRODUCT_NAME                "teleSynth"
 )
 
 if(IOS)

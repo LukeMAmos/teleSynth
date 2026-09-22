@@ -1,7 +1,7 @@
 #include "DraggableZone.h"
 
 DraggableZone::DraggableZone(){
-
+    
     std::fill(std::begin(touchToSlot), std::end(touchToSlot), -1);
     
 }
@@ -9,8 +9,10 @@ DraggableZone::DraggableZone(){
 
 void DraggableZone::paint(juce::Graphics &g){
     
-    g.fillAll (juce::Colours::darkgrey.darker());
-    g.setColour (juce::Colours::cyan);
+    juce::Rectangle<int> rectArea = getLocalBounds();
+
+    g.fillAll (juce::Colours::blueviolet);
+    g.setColour (ThemeColours::black());
     g.drawRect (getLocalBounds(), 2);
     
 }

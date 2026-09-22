@@ -1,7 +1,8 @@
-#include "SmallSlider.h"
+#include "Slider.h"
 #include <numbers>
+#include "ThemeColours.h"
 
-Slider::Slider(){
+DotSlider::DotSlider(){
     
     //Set the slider style and the rotary parameters of the slider
     setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -10,10 +11,13 @@ Slider::Slider(){
 
 
 //Override Paint function
-void Slider::paint(juce::Graphics &g){
+void DotSlider::paint(juce::Graphics &g){
     
     //Get the bounds of the slider and the Sliders current value normalised between 0 and 1 to make drawing easier
     auto wholeBounds = getLocalBounds().reduced(5);
+    g.setColour(ThemeColours::black());
+    g.fillRoundedRectangle(wholeBounds.getX(), wholeBounds.getY(), wholeBounds.getWidth(), wholeBounds.getHeight(), 8);
+    
     float SliderPos = (float)((getValue() - getMinimum())/(getMaximum() - getMinimum()));
     
     //Get the start and end angle of the rotary slider to use to calculate the angle step inbetween each of the dots
@@ -41,10 +45,10 @@ void Slider::paint(juce::Graphics &g){
         
         //Set the colour used for the dot and draw it
         if(i <= maxDotPosition){
-            g.setColour (juce::Colours::grey.withBrightness(0.2f + SliderPos));
+            g.setColour (ThemeColours::orange().withBrightness(0.2f + SliderPos));
             g.fillEllipse (juce::Rectangle<float> (dotWidth, dotWidth).withCentre (dotLocation));
         }else {
-            g.setColour (juce::Colours::grey.withBrightness(0.15f));
+            g.setColour (ThemeColours::orange().withBrightness(0.15f));
             g.fillEllipse (juce::Rectangle<float> (dotWidth, dotWidth).withCentre (dotLocation));
         }
         

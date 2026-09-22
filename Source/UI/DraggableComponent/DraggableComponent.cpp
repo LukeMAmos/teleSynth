@@ -3,15 +3,15 @@
 DraggableComponent::DraggableComponent(){
     
     setWantsKeyboardFocus(true);
-    
     setDiameter(50.0f);
 }
 
 void DraggableComponent::paint(juce::Graphics &g){
     
-    g.setColour (juce::Colours::blueviolet);
-
+    g.setColour (ThemeColours::orange());
     g.fillEllipse(0, 0, diameter, diameter);
+    g.setColour (ThemeColours::black());
+    g.fillEllipse(0, 0, diameter-4, diameter-4);
 }
 
 void DraggableComponent::resized(){
@@ -21,11 +21,13 @@ void DraggableComponent::resized(){
 void DraggableComponent::setDiameter(float diameterIn){
     
     diameter = diameterIn;
+    setSize((int)diameter, (int)diameter);
 }
 
 float DraggableComponent::getDiameter(){
     
     return diameter;
+    
 }
 
 void DraggableComponent::setStartFunction(std::function<void(float xpos,float ypos)> function){
@@ -39,11 +41,5 @@ void DraggableComponent::setMoveFunction(std::function<void(float xpos,float ypo
 void DraggableComponent::setEndFunction(std::function<void()> function){
     
     onDragEnd = function;
-    
-}
-
-void DraggableComponent::setXYBounds(juce::Rectangle<int> bounds){
-    
-    constrainer.setBoundsForComponent(this, bounds, false, false, false, false);
     
 }

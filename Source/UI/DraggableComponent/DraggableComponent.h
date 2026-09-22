@@ -29,9 +29,6 @@ public:
     void callOnDragMove(float xpos,float ypos){onDragMove(xpos , ypos);}
     void callOnDragEnd(){onDragEnd();}
     
-    //Function for setting the area the slider can be dragged inside
-    void setXYBounds(juce::Rectangle<int> bounds);
-    
 private:
     
     float diameter = 100;
