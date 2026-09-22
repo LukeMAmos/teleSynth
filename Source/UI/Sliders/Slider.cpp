@@ -7,6 +7,7 @@ DotSlider::DotSlider(){
     //Set the slider style and the rotary parameters of the slider
     setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     setRotaryParameters(juce::MathConstants<float>::pi * 1.2f, juce::MathConstants<float>::pi * 2.8f, true);
+    setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 }
 
 

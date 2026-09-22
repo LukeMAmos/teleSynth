@@ -72,6 +72,8 @@ target_sources(teleSynth
     Source/UI/Buttons/SwitchScreen.h
     Source/UI/Buttons/SwitchScreen.cpp
     Source/UI/ThemeColours.h
+    Source/Synth/Synthesiser.h
+    Source/Synth/Synthesiser.cpp
 )
 
 
@@ -105,6 +107,12 @@ source_group("Source\\UI\\Buttons" FILES
 source_group("Source\\UI" FILES 
     Source/UI/ThemeColours.h
 )
+
+source_group("Source\\Synth" FILES 
+    Source/Synth/Synthesiser.h
+    Source/Synth/Synthesiser.cpp
+)
+
 
 target_compile_definitions(teleSynth
     PRIVATE
