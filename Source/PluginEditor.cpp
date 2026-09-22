@@ -27,7 +27,8 @@ void teleSynthAudioProcessorEditor::paint (juce::Graphics& g){
 
 void teleSynthAudioProcessorEditor::resized(){
     
-    draggableZone.setBounds(getWidth() * 0.05 , getHeight() * 0.4 , getWidth() - (getWidth() * 0.05) , getHeight() * 0.6 ); 
+    auto fullBounds = getBounds().removeFromTop(10).reduced(5);
+    draggableZone.setBounds((int)fullBounds.removeFromBottom(getHeight() * 0.6));
     dotSlider.setBounds(0 ,0, 100 , 80);
 
     

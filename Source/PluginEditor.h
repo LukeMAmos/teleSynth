@@ -20,9 +20,13 @@ private:
     teleSynthAudioProcessor& audioProcessor;
     
     //UI Elements
+    
+    //Main Page
     DraggableZone draggableZone;
     DotSlider dotSlider; 
     
+    
+    //Menu Page 
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessorEditor)
 };

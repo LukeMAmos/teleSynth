@@ -7,14 +7,20 @@ public:
     
     
     SliderSynthVoice();
-    
+    //Note on and off functions, as well as a function to update the frequency of the note
     void startNote(float frequency);
     void stopNote();
     
+    //Need to make the frequency update smooth
+    void updateNoteFrequency(float frequency);
+    
+    //Rendering the voice
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples);
     
-    void updateOscillators();
+    //update the oscillator used from the random Wavetable generator 
+    void updateOSCWavetable();
     
+    bool isActive(){return voiceActive;}
     
 private:
     
@@ -23,6 +29,7 @@ private:
     juce::ADSR ADSR;
     juce::ADSR::Parameters adsrParams;
     
+    bool voiceActive = false;
 
 };
 
