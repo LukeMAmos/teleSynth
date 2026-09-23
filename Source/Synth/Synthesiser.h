@@ -6,6 +6,9 @@ class SliderSynthesiser{
     
 public:
     
+    //Start and stop notes as needed
+    void startNote(float frequency, float velocity , int touch);
+    void stopNote(int touch);
     
     //Go through each of the voices and combine the ou
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples);

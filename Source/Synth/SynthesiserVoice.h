@@ -8,7 +8,7 @@ public:
     
     SliderSynthVoice();
     //Note on and off functions, as well as a function to update the frequency of the note
-    void startNote(float frequency);
+    void startNote(float frequency , float velocity);
     void stopNote();
     
     //Need to make the frequency update smooth
@@ -20,12 +20,14 @@ public:
     //update the oscillator used from the random Wavetable generator 
     void updateOSCWavetable();
     
+    void setADSR(juce::ADSR::Parameters adsrParamsIn);
+    
     bool isActive(){return voiceActive;}
     
 private:
     
     //Inital Implementation using a simple SineWave
-    juce::dsp::Oscillator<float> oscillator;
+    juce::dsp::Oscillator<float> OSC;
     juce::ADSR ADSR;
     juce::ADSR::Parameters adsrParams;
     
