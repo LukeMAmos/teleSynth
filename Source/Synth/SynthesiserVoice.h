@@ -22,7 +22,7 @@ public:
     
     void setADSR(juce::ADSR::Parameters adsrParamsIn);
     
-    bool isActive(){return voiceActive;}
+    bool isActive();
     
 private:
     
@@ -30,8 +30,5 @@ private:
     juce::dsp::Oscillator<float> OSC;
     juce::ADSR ADSR;
     juce::ADSR::Parameters adsrParams;
-    
-    bool voiceActive = false;
-
 };
 

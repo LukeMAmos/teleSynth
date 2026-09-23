@@ -45,3 +45,8 @@ void SliderSynthVoice::setADSR(juce::ADSR::Parameters adsrParamsIn){
     ADSR.setParameters(adsrParams); 
     
 }
+
+bool SliderSynthVoice::isActive(){
+    //if the ADSR is not active then the voice is fine to be freed up and used by a different touch
+    return ADSR.isActive();
+}

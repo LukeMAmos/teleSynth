@@ -21,10 +21,11 @@ public:
     
 private:
     
+    static constexpr int maxVoices = 5;
     //Array of Voices
-    SliderSynthVoice sliderVoices[5];
+    SliderSynthVoice sliderVoices[maxVoices];
     //Array to hold which touch is linked to which voice, the position is the voice and the index is the Touch
-    int voiceToTouch[5];
+    int voiceToTouch[maxVoices];
     
     int findFreeVoice(); 
     
