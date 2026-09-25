@@ -12,6 +12,7 @@ public:
     //Note on and off functions, as well as a function to update the frequency of the note
     void startNote(float frequency , float velocity);
     void stopNote();
+    void updateValues(float frequency, float velocity); 
     
     //Need to make the frequency update smooth
     void updateNoteFrequency(float frequency);

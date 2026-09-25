@@ -8,6 +8,11 @@ teleSynthAudioProcessorEditor::teleSynthAudioProcessorEditor (teleSynthAudioProc
     
     addAndMakeVisible(draggableZone);
     addAndMakeVisible(dotSlider);
+    
+    draggableZone.setStartFunction(<#std::function<void (float, float, int)> function#>);
+    draggableZone.setMoveFunction(<#std::function<void (float, float, int)> function#>);
+    draggableZone.setEndFunction(<#std::function<void (int)> function#>);
+    
 }
 
 teleSynthAudioProcessorEditor::~teleSynthAudioProcessorEditor(){

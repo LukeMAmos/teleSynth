@@ -44,7 +44,8 @@ public:
     //==============================================================================
     
 
-
+    //Synthesiser pass functions so that it can be reached by the draggable zone componenent in the editor for passing functions
+    //need to access 
     
 private:
     

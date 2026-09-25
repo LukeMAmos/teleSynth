@@ -31,6 +31,12 @@ void SliderSynthVoice::stopNote(){
     
 }
 
+void SliderSynthVoice::updateValues(float frequency , float velocity){
+    
+    
+    
+}
+
 void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples){
     
     juce::ScopedNoDenormals noDenormals;
