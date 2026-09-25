@@ -30,16 +30,4 @@ float DraggableComponent::getDiameter(){
     
 }
 
-void DraggableComponent::setStartFunction(std::function<void(float xpos,float ypos)> function){
-    
-    onDragStart = function;
-}
-void DraggableComponent::setMoveFunction(std::function<void(float xpos,float ypos)> function){
-    
-    onDragMove = function;
-}
-void DraggableComponent::setEndFunction(std::function<void()> function){
-    
-    onDragEnd = function;
-    
-}
+

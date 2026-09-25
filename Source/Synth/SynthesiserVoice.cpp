@@ -3,9 +3,21 @@
 
 SliderSynthVoice::SliderSynthVoice(){
     
-    
+    OSC.initialise([](float x) { return x < 0.0f ? -1.0f : 1.0f; }); 
     
 }
+
+void SliderSynthVoice::initaliseVoice(double sampleRate , int samplesPerBlock , int numChannels){
+    
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
+    spec.numChannels = (juce::uint32)numChannels;
+    
+    OSC.prepare(spec);
+    ADSR.setSampleRate(spec.sampleRate);
+}
+
 
 void SliderSynthVoice::startNote(float freqeuncy, float velocity){
     

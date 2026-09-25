@@ -1,5 +1,13 @@
 #include "Synthesiser.h"
 
+void SliderSynthesiser::initaliseVoices(double sampleRate , int samplesPerBlock , int numChannels){
+    
+    for(auto& voice : sliderVoices){
+        
+        voice.initaliseVoice(sampleRate, samplesPerBlock, numChannels); 
+        
+    }
+}
 void SliderSynthesiser::startNote(float frequency, float velocity , int touch){
     
     //find a free voice , then use the position of the free voice to call start note on the voice 
@@ -39,7 +47,21 @@ void SliderSynthesiser::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, 
     
     juce::ScopedNoDenormals noDenormals;
     
+    juce::AudioBuffer<float> tempBuffer(outputBuffer.getNumChannels() , numSamples);
     
+    for(auto& voice : sliderVoices){
+        
+        if(voice.isActive()){
+            
+            tempBuffer.clear();
+            voice.renderNextBlock(tempBuffer, startSample, numSamples);
+            
+            for(int i = 0; i < outputBuffer.getNumChannels() ; i++){
+                
+                outputBuffer.addFrom(i, startSample, tempBuffer, i, 0, numSamples);
+            }
+        }
+    }
     
     
     

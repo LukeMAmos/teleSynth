@@ -1,6 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
-
+#include "Synth/Synthesiser.h"
 
 
 class teleSynthAudioProcessor : public juce::AudioProcessor
@@ -48,6 +48,7 @@ public:
     
 private:
     
+    SliderSynthesiser sliderSynthesiser;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessor)
 };

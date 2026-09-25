@@ -7,6 +7,8 @@ public:
     
     
     SliderSynthVoice();
+    
+    void initaliseVoice(double sampleRate , int samplesPerBlock , int numChannels); 
     //Note on and off functions, as well as a function to update the frequency of the note
     void startNote(float frequency , float velocity);
     void stopNote();

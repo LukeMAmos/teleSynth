@@ -5,13 +5,14 @@ teleSynthAudioProcessor::teleSynthAudioProcessor(): AudioProcessor (BusesPropert
 .withOutput ("Output", juce::AudioChannelSet::stereo(), true)){
     
     
+    
 }
 teleSynthAudioProcessor::~teleSynthAudioProcessor() {}
 
 //==============================================================================
 void teleSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     
-    
+    sliderSynthesiser.initaliseVoices(sampleRate, samplesPerBlock, getNumOutputChannels());
     
     
 }
@@ -28,7 +29,7 @@ void teleSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     
     juce::ScopedNoDenormals noDenormals;
     
-    
+    sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples()); 
     
 }
 

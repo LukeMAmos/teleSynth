@@ -6,6 +6,8 @@ class SliderSynthesiser{
     
 public:
     
+    
+    void initaliseVoices(double sampleRate , int samplesPerBlock , int numChannels);
     //Start and stop notes as needed
     void startNote(float frequency, float velocity , int touch);
     void stopNote(int touch);

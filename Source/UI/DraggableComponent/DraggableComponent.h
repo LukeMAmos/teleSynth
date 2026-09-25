@@ -21,13 +21,6 @@ public:
     void setDiameter(float diameterIn);
     float getDiameter();
     
-    void setStartFunction(std::function<void(float xpos,float ypos)> function);
-    void setMoveFunction(std::function<void(float xpos,float ypos)> function);
-    void setEndFunction(std::function<void()> function);
-    
-    void callOnDragStart(float xpos,float ypos){onDragStart(xpos , ypos);}
-    void callOnDragMove(float xpos,float ypos){onDragMove(xpos , ypos);}
-    void callOnDragEnd(){onDragEnd();}
     
 private:
     
@@ -36,9 +29,6 @@ private:
     juce::ComponentDragger dragger;
     juce::ComponentBoundsConstrainer constrainer; 
     
-    //Functions to call
-    std::function<void(float xpos,float ypos)> onDragStart;
-    std::function<void(float xpos,float ypos)> onDragMove;
-    std::function<void()> onDragEnd;
+
 };
 

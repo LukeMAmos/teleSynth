@@ -52,6 +52,8 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     
     //Set the position of the point using the bounded position of the touch event
     activePoints[slot]->setCentrePosition(boundedPos.getX(), boundedPos.getY());
+    
+    callOnDragStart(boundedPos.getX(), boundedPos.getY(), touchIndex);
 }
 
 void DraggableZone::mouseDrag (const juce::MouseEvent& event){
@@ -71,6 +73,8 @@ void DraggableZone::mouseDrag (const juce::MouseEvent& event){
     boundedPos.setY(juce::jlimit(radius, getHeight() - radius, boundedPos.getY()));
     
     activePoints[slot]->setCentrePosition(boundedPos.getX() , boundedPos.getY());
+    
+    callOnDragMove(boundedPos.getX(), boundedPos.getY(), touchIndex);
 }
 
 void DraggableZone::mouseUp   (const juce::MouseEvent& event){
@@ -86,6 +90,8 @@ void DraggableZone::mouseUp   (const juce::MouseEvent& event){
     
     activePoints[slot].reset();
     touchToSlot[touchIndex] = -1;
+    
+    callOnDragEnd(<#int touch#>);
 }
 
 int DraggableZone::findFreeSlot() const{
@@ -98,4 +104,18 @@ int DraggableZone::findFreeSlot() const{
     }
     
     return -1;
+}
+
+void DraggableZone::setStartFunction(std::function<void(float xpos,float ypos, int touch )> function){
+    
+    onDragStart = function;
+}
+void DraggableZone::setMoveFunction(std::function<void(float xpos,float ypos, int touch )> function){
+    
+    onDragMove = function;
+}
+void DraggableZone::setEndFunction(std::function<void(int touch)> function){
+    
+    onDragEnd = function;
+    
 }
