@@ -33,5 +33,9 @@ private:
     juce::dsp::Oscillator<float> OSC;
     juce::ADSR ADSR;
     juce::ADSR::Parameters adsrParams;
+    
+    std::atomic<bool> valueUpdateNeeded;
+    std::atomic<float> xValueSlider;
+    std::atomic<float> yValueSlider;
 };
 

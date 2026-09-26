@@ -91,7 +91,7 @@ void DraggableZone::mouseUp   (const juce::MouseEvent& event){
     activePoints[slot].reset();
     touchToSlot[touchIndex] = -1;
     
-    callOnDragEnd(<#int touch#>);
+    callOnDragEnd(touchIndex);
 }
 
 int DraggableZone::findFreeSlot() const{

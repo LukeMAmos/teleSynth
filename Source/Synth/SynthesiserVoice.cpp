@@ -21,25 +21,34 @@ void SliderSynthVoice::initaliseVoice(double sampleRate , int samplesPerBlock , 
 
 void SliderSynthVoice::startNote(float freqeuncy, float velocity){
     
-    
-    
+    OSC.setFrequency(freqeuncy);
+    ADSR.noteOn();
 }
 
 void SliderSynthVoice::stopNote(){
     
-    
+    ADSR.noteOff();
     
 }
 
 void SliderSynthVoice::updateValues(float frequency , float velocity){
     
-    
-    
+    //Save the values and set the update flag to true
+    valueUpdateNeeded = true;
+    xValueSlider = velocity;
+    yValueSlider = frequency;
 }
 
 void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples){
     
     juce::ScopedNoDenormals noDenormals;
+    
+    //update the values before they are used to render the next audio block
+    if(valueUpdateNeeded){
+        OSC.setFrequency(yValueSlider);
+        valueUpdateNeeded = false; 
+    }
+    
     
     juce::dsp::AudioBlock<float> block(outputBuffer);
     auto subBlock = block.getSubBlock(0, (size_t)numSamples);

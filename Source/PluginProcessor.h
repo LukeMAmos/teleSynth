@@ -45,7 +45,10 @@ public:
     
 
     //Synthesiser pass functions so that it can be reached by the draggable zone componenent in the editor for passing functions
-    //need to access 
+    //need to access to startNote , StopNOte and update values
+    std::function<void(float frequency, float velocity , int touch)> getSynthStartNote();
+    std::function<void(int touch)> getSynthStopNote();
+    std::function<void(float frequency, float velocity , int touch)> getSynthMoveNote();
     
 private:
     

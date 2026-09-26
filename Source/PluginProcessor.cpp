@@ -88,3 +88,26 @@ void teleSynthAudioProcessor::setStateInformation (const void* data, int sizeInB
     
 }
 
+std::function<void(float frequency, float velocity , int touch)> teleSynthAudioProcessor::getSynthStartNote(){
+    
+    return [this](float frequency, float velocity, int touch) {
+            sliderSynthesiser.startNote(frequency, velocity, touch);
+        };
+    
+}
+
+std::function<void(int touch)> teleSynthAudioProcessor::getSynthStopNote(){
+    
+    return [this](int touch){
+        
+        sliderSynthesiser.stopNote(touch);
+    }; 
+}
+
+
+std::function<void(float frequency, float velocity , int touch)> teleSynthAudioProcessor::getSynthMoveNote(){
+    
+    return [this](float frequency, float velocity, int touch){
+        sliderSynthesiser.updateValues(frequency, velocity, touch);
+    };
+}

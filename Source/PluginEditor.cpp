@@ -9,9 +9,9 @@ teleSynthAudioProcessorEditor::teleSynthAudioProcessorEditor (teleSynthAudioProc
     addAndMakeVisible(draggableZone);
     addAndMakeVisible(dotSlider);
     
-    draggableZone.setStartFunction(<#std::function<void (float, float, int)> function#>);
-    draggableZone.setMoveFunction(<#std::function<void (float, float, int)> function#>);
-    draggableZone.setEndFunction(<#std::function<void (int)> function#>);
+    draggableZone.setStartFunction(audioProcessor.getSynthStartNote());
+    draggableZone.setMoveFunction(audioProcessor.getSynthMoveNote());
+    draggableZone.setEndFunction(audioProcessor.getSynthStopNote());
     
 }
 
@@ -32,7 +32,7 @@ void teleSynthAudioProcessorEditor::paint (juce::Graphics& g){
 
 void teleSynthAudioProcessorEditor::resized(){
     
-    auto fullBounds = getBounds().removeFromTop(10).reduced(5);
+    auto fullBounds = getBounds().reduced(5);
     draggableZone.setBounds(fullBounds.removeFromBottom((int)(getHeight() * 0.6f)));
     dotSlider.setBounds(0 ,0, 100 , 80);
 

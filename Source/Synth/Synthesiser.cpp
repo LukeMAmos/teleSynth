@@ -42,7 +42,21 @@ void SliderSynthesiser::stopNote(int touch){
     sliderVoices[voice].stopNote();
 }
 
-//Go through each of the voices and combine the output, after combining effects can be processed 
+void SliderSynthesiser::updateValues(float frequency, float velocity, int touch){
+    
+    for(int voice = 0; voice < maxVoices ; voice++ ){
+        
+        if(voiceToTouch[voice] == touch){
+            //Found the correct voice now need to call to update the specific values of that voice
+            sliderVoices[voice].updateValues(frequency, velocity); 
+        }
+        
+    }
+    
+    
+}
+
+//Go through each of the voices and combine the output, after combining effects can be processed
 void SliderSynthesiser::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples){
     
     juce::ScopedNoDenormals noDenormals;
