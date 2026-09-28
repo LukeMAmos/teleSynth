@@ -14,6 +14,8 @@ public:
     void mouseDown (const juce::MouseEvent& event) override;
     void mouseUp   (const juce::MouseEvent& event) override;
     
+    //Getter Function for viewing what screen we are on
+    bool mainScreenActive(){return onMainScreen;} 
     
     
 private:
@@ -21,4 +23,5 @@ private:
     //On initialisation open to the main screen, then use touch events to control what happens afterwards
     bool onMainScreen = true;
     
+    bool isDown = false;
 };

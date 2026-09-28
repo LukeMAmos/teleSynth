@@ -25,10 +25,6 @@ void DraggableZone::paint(juce::Graphics &g){
 }
 void DraggableZone::resized(){
     
-    auto areaLimits = getLocalBounds();
-    
-
-    
 }
 
 void DraggableZone::mouseDown (const juce::MouseEvent& event){

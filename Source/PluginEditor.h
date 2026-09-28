@@ -3,6 +3,7 @@
 #include "UI/DraggableComponent/DraggableZone.h"
 #include "UI/Sliders/Slider.h"
 #include "UI/ThemeColours.h"
+#include "UI/Buttons/SwitchScreen.h"
 
 class teleSynthAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
@@ -20,6 +21,7 @@ private:
     teleSynthAudioProcessor& audioProcessor;
     
     //UI Elements
+    SwitchScreenButton switchScreen; 
     
     //Main Page
     DraggableZone draggableZone;
