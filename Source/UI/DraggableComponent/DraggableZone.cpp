@@ -9,13 +9,15 @@ DraggableZone::DraggableZone(){
 
 void DraggableZone::paint(juce::Graphics &g){
     
-    //fill background with grey
-    g.fillAll (ThemeColours::grey());
+
     
     //Draw black bounding box
     g.setColour (ThemeColours::black());
-    g.drawRoundedRectangle(getLocalBounds().toFloat(), 8.0f, 3.0f);
-    g.drawRect (getLocalBounds(), 3);
+    g.drawRoundedRectangle(getLocalBounds().reduced(5.0f).toFloat(), 10.0f, 5.0f);
+    
+    //fill background with grey
+    g.setColour(ThemeColours::grey());
+    g.fillRoundedRectangle(getLocalBounds().reduced(5.0f).toFloat(), 10.0f);
     
     //Draw the grid background
     
@@ -53,8 +55,8 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     int radius = (int)(activePoints[slot]->getDiameter() / 2.0f);
     //Bound the point inside the DraggableZone, the minimum it can go is the radius of the circle the max is the width minus the radius in both up and down direction
     juce::Point<int> boundedPos = event.getPosition();
-    boundedPos.setX(juce::jlimit(radius, getWidth() - radius, boundedPos.getX()));
-    boundedPos.setY(juce::jlimit(radius, getHeight() - radius, boundedPos.getY()));
+    boundedPos.setX(juce::jlimit(radius+5, getWidth() - radius - 5, boundedPos.getX()));
+    boundedPos.setY(juce::jlimit(radius+5, getHeight() - radius - 5 , boundedPos.getY()));
     
     
     //Set the position of the point using the bounded position of the touch event
@@ -76,8 +78,8 @@ void DraggableZone::mouseDrag (const juce::MouseEvent& event){
     int radius = (int)(activePoints[slot]->getDiameter() / 2.0f);
     //Bound the point inside the DraggableZone, the minimum it can go is the radius of the circle the max is the width minus the radius in both up and down direction
     juce::Point<int> boundedPos = event.getPosition();
-    boundedPos.setX(juce::jlimit(radius, getWidth() - radius, boundedPos.getX()));
-    boundedPos.setY(juce::jlimit(radius, getHeight() - radius, boundedPos.getY()));
+    boundedPos.setX(juce::jlimit(radius+5, getWidth() - radius - 5, boundedPos.getX()));
+    boundedPos.setY(juce::jlimit(radius+5, getHeight() - radius - 5 , boundedPos.getY()));
     
     activePoints[slot]->setCentrePosition(boundedPos.getX() , boundedPos.getY());
     
