@@ -28,7 +28,6 @@ void SliderSynthVoice::startNote(float freqeuncy, float velocity){
 void SliderSynthVoice::stopNote(){
     
     ADSR.noteOff();
-    
 }
 
 void SliderSynthVoice::updateValues(float frequency , float velocity){
@@ -56,7 +55,7 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     
     OSC.process(context);
     ADSR.applyEnvelopeToBuffer(outputBuffer, 0, numSamples);
-        
+    
 }
 
 void SliderSynthVoice::updateOSCWavetable(){

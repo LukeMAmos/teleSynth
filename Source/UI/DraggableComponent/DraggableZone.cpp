@@ -9,11 +9,16 @@ DraggableZone::DraggableZone(){
 
 void DraggableZone::paint(juce::Graphics &g){
     
-    juce::Rectangle<int> rectArea = getLocalBounds();
-
-    g.fillAll (juce::Colours::blueviolet);
+    //fill background with grey
+    g.fillAll (ThemeColours::grey());
+    
+    //Draw black bounding box
     g.setColour (ThemeColours::black());
-    g.drawRect (getLocalBounds(), 2);
+    g.drawRoundedRectangle(getLocalBounds().toFloat(), 8.0f, 3.0f);
+    g.drawRect (getLocalBounds(), 3);
+    
+    //Draw the grid background
+    
     
 }
 void DraggableZone::resized(){
@@ -28,7 +33,8 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     
     //Get the index of the touch
     const int touchIndex = event.source.getIndex();
-    if(touchIndex < 0 || touchIndex >= maxTouches) return;
+    if(touchIndex < 0 || touchIndex >= maxTouches)
+        return;
     
     //Check there is a free Draggable component available
     const int slot = findFreeSlot();
@@ -49,6 +55,7 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     juce::Point<int> boundedPos = event.getPosition();
     boundedPos.setX(juce::jlimit(radius, getWidth() - radius, boundedPos.getX()));
     boundedPos.setY(juce::jlimit(radius, getHeight() - radius, boundedPos.getY()));
+    
     
     //Set the position of the point using the bounded position of the touch event
     activePoints[slot]->setCentrePosition(boundedPos.getX(), boundedPos.getY());

@@ -24,7 +24,7 @@ teleSynthAudioProcessorEditor::~teleSynthAudioProcessorEditor(){
 //==============================================================================
 void teleSynthAudioProcessorEditor::paint (juce::Graphics& g){
     
-    g.fillAll(ThemeColours::grey());
+    g.fillAll(ThemeColours::background());
     
     
 }
@@ -34,7 +34,8 @@ void teleSynthAudioProcessorEditor::resized(){
     
     auto fullBounds = getBounds().reduced(5);
     draggableZone.setBounds(fullBounds.removeFromBottom((int)(getHeight() * 0.6f)));
-    dotSlider.setBounds(0 ,0, 100 , 80);
+    
+    dotSlider.setBounds(0 ,0, 100 , 100);
 
     
 }

@@ -1,5 +1,17 @@
 #include "Synthesiser.h"
 
+SliderSynthesiser::SliderSynthesiser(){
+    
+    std::fill(std::begin(voiceToTouch), std::end(voiceToTouch), -1);
+    
+    juce::ADSR::Parameters adsrParams;
+    adsrParams.attack = 0.8f;
+    adsrParams.decay = 0.2f;
+    adsrParams.sustain = 0.6f;
+    adsrParams.release = 0.5f;
+    setADSR(adsrParams);
+}
+
 void SliderSynthesiser::initaliseVoices(double sampleRate , int samplesPerBlock , int numChannels){
     
     for(auto& voice : sliderVoices){
@@ -13,6 +25,7 @@ void SliderSynthesiser::startNote(float frequency, float velocity , int touch){
     //find a free voice , then use the position of the free voice to call start note on the voice 
     int freeVoice = findFreeVoice();
     if(freeVoice < 0 || freeVoice > maxVoices )
+        //No free voices available 
         return;
     
     sliderVoices[freeVoice].startNote(frequency, velocity);
@@ -25,21 +38,22 @@ void SliderSynthesiser::startNote(float frequency, float velocity , int touch){
 void SliderSynthesiser::stopNote(int touch){
     
     //Call the stop note on the specific touch, dont free the voice here as the release stage may still be active
-    
     int voice = -1;
     for(int i = 0; i < maxVoices ; i++){
         
         if(voiceToTouch[i] == touch){
             //Find the voice we need to release
-            voice = i;
+            //Call the voice to stopNote
+            sliderVoices[i].stopNote();
+            voiceToTouch[i] = -1;
         }
     }
-    //If no voice matches the touch then release
+
+    //If no voice matches the touch then return
     if(voice == -1)
         return;
     
-    //Call the voice to stopNote
-    sliderVoices[voice].stopNote();
+
 }
 
 void SliderSynthesiser::updateValues(float frequency, float velocity, int touch){
@@ -63,12 +77,14 @@ void SliderSynthesiser::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, 
     
     juce::AudioBuffer<float> tempBuffer(outputBuffer.getNumChannels() , numSamples);
     
-    for(auto& voice : sliderVoices){
+    for(int voice = 0 ; voice < maxVoices ; voice++){
         
-        if(voice.isActive()){
+        if(sliderVoices[voice].isActive()){
+            
+            //DBG("Currently playing" + juce::String(voice));
             
             tempBuffer.clear();
-            voice.renderNextBlock(tempBuffer, startSample, numSamples);
+            sliderVoices[voice].renderNextBlock(tempBuffer, startSample, numSamples);
             
             for(int i = 0; i < outputBuffer.getNumChannels() ; i++){
                 
