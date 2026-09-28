@@ -6,7 +6,7 @@ DotSlider::DotSlider(){
     
     //Set the slider style and the rotary parameters of the slider
     setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    setRotaryParameters(juce::MathConstants<float>::pi * 1.2f, juce::MathConstants<float>::pi * 2.8f, true);
+    setRotaryParameters(0.0f, juce::MathConstants<float>::twoPi , true);
     setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 }
 
@@ -25,6 +25,7 @@ void DotSlider::paint(juce::Graphics &g){
     float rotaryStartAngle = getRotaryParameters().startAngleRadians;
     float rotaryEndAngle = getRotaryParameters().endAngleRadians;
     
+    //sweep from bottom in an aniclockwise motion
     auto angleStep = (rotaryStartAngle - rotaryEndAngle) / 10.0f;
     auto radius = juce::jmin(wholeBounds.getWidth(), wholeBounds.getHeight()) / 2;
     
