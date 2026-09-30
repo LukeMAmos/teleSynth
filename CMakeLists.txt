@@ -76,6 +76,8 @@ target_sources(teleSynth
     Source/Synth/Synthesiser.cpp
     Source/Synth/SynthesiserVoice.h
     Source/Synth/SynthesiserVoice.cpp
+    Source/UI/adsrSlider/adsrSlider.h
+    Source/UI/adsrSlider/adsrSlider.cpp
 )
 
 
@@ -104,6 +106,11 @@ source_group("Source\\UI\\Sliders" FILES
 source_group("Source\\UI\\Buttons" FILES 
     Source/UI/Buttons/SwitchScreen.h
     Source/UI/Buttons/SwitchScreen.cpp
+)
+
+source_group("Source\\UI\\adsrSlider" FILES 
+    Source/UI/adsrSlider/adsrSlider.h
+    Source/UI/adsrSlider/adsrSlider.cpp
 )
 
 source_group("Source\\UI" FILES 
