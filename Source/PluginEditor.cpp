@@ -4,15 +4,25 @@
 
 teleSynthAudioProcessorEditor::teleSynthAudioProcessorEditor (teleSynthAudioProcessor& p): AudioProcessorEditor (&p), audioProcessor (p){
  
+    //Setup mainPage and menuPage
+    mainPage = std::make_unique<MainPage>(audioProcessor);
+    menuPage = std::make_unique<MenuPage>(audioProcessor);
+    
+    addChildComponent(*mainPage);
+    addChildComponent(*menuPage);
+    
+    switchScreen.onClick = [this](){
+        
+        mainScreenActive = !mainScreenActive;
+        switchPage();
+    };
+    
+    //Switch screen button is persistant, added after so it goes on top
+    addAndMakeVisible(switchScreen);
+    
+    switchPage();
+    
     setSize(400 , 600);
-    
-    addAndMakeVisible(draggableZone);
-    addAndMakeVisible(dotSlider);
-    
-    draggableZone.setStartFunction(audioProcessor.getSynthStartNote());
-    draggableZone.setMoveFunction(audioProcessor.getSynthMoveNote());
-    draggableZone.setEndFunction(audioProcessor.getSynthStopNote());
-    
 }
 
 teleSynthAudioProcessorEditor::~teleSynthAudioProcessorEditor(){
@@ -32,15 +42,24 @@ void teleSynthAudioProcessorEditor::paint (juce::Graphics& g){
 
 void teleSynthAudioProcessorEditor::resized(){
     
-    auto fullBounds = getBounds().reduced(5, 15);
-    draggableZone.setBounds(fullBounds.removeFromBottom((int)(getHeight() * 0.6f)));
+    switchScreen.setBounds(50, 50, 100, 100);
     
-    dotSlider.setBounds(0 ,0, 100 , 100);
-
+    auto bounds = getLocalBounds();
+    
+    if(mainPage != nullptr)
+        mainPage->setBounds(bounds);
+    
+    if(menuPage != nullptr)
+        menuPage->setBounds(bounds);
     
 }
 
-
+void teleSynthAudioProcessorEditor::switchPage(){
+    
+    mainPage->setVisible(mainScreenActive);
+    menuPage->setVisible(!mainScreenActive);
+    
+}
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {

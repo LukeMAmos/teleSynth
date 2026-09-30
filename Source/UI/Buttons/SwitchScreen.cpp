@@ -1,24 +1,8 @@
 #include "SwitchScreen.h"
 
-SwitchScreenButton::SwitchScreenButton(){
+SwitchScreenButton::SwitchScreenButton() : Button("Switch Screen Button"){
     
     
-    
-    
-}
-
-void SwitchScreenButton::paint(juce::Graphics &g){
-    
-    //If we are on the main screen draw with specific method 
-    if(onMainScreen){
-        //Orange background with black circle
-        
-        
-    }else{
-        //Black background with orange Circle 
-        
-        
-    }
     
     
 }
@@ -27,21 +11,28 @@ void SwitchScreenButton::resized(){
 
 }
 
-//Control touch events
-void SwitchScreenButton::mouseDown (const juce::MouseEvent& event){
+void SwitchScreenButton::paintButton(Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown){
     
-    //Update the isDown flag
-    isDown = true;
+    auto bounds = getLocalBounds().reduced(5).toFloat();
+    //If we are on the main screen draw with specific method
+    if(!shouldDrawButtonAsDown){
+        //Orange background with black circle
+        g.setColour(ThemeColours::orange());
+        g.fillRoundedRectangle(bounds, 8);
+        
+        g.setColour(ThemeColours::black());
+        g.fillEllipse(bounds.reduced(8));
+        
+    }else if (shouldDrawButtonAsDown){
+        //Black background with orange Circle
+        g.setColour(ThemeColours::black());
+        g.fillRoundedRectangle(bounds, 8);
+        
+        g.setColour(ThemeColours::orange());
+        g.fillEllipse(bounds.reduced(8));
+        
+        
+    }
     
     
-}
-
-void SwitchScreenButton::mouseUp   (const juce::MouseEvent& event){
-    
-    //Update the isDown flag
-    isDown = false;
-    
-    //This function being called means the press is finished, therefore update the onMainScreenFlag by flipping its bool value
-    onMainScreen = !onMainScreen;
-
 }

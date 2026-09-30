@@ -1,27 +1,17 @@
+#pragma once
 #include <juce_gui_basics/juce_gui_basics.h>
-
-class SwitchScreenButton : public juce::Component {
+#include "ThemeColours.h"
+class SwitchScreenButton : public juce::Button {
     
 
 public:
     
-    SwitchScreenButton();
-    
-    void paint(juce::Graphics &g) override;
+    SwitchScreenButton(); 
     void resized() override;
     
-    //Control touch events
-    void mouseDown (const juce::MouseEvent& event) override;
-    void mouseUp   (const juce::MouseEvent& event) override;
-    
-    //Getter Function for viewing what screen we are on
-    bool mainScreenActive(){return onMainScreen;} 
-    
+    void paintButton(Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
     
 private:
     
-    //On initialisation open to the main screen, then use touch events to control what happens afterwards
-    bool onMainScreen = true;
     
-    bool isDown = false;
 };
