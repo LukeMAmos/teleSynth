@@ -1,5 +1,5 @@
 #pragma once
-#include <JuceHeader.h>
+#include "juce_gui_basics/juce_gui_basics.h"
 #include "DraggableComponent.h"
 
 class DraggableZone : public juce::Component{

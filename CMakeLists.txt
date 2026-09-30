@@ -78,6 +78,8 @@ target_sources(teleSynth
     Source/Synth/SynthesiserVoice.cpp
     Source/UI/adsrSlider/adsrSlider.h
     Source/UI/adsrSlider/adsrSlider.cpp
+    Source/UI/adsrSlider/adsrPoint.h
+    Source/UI/adsrSlider/adsrPoint.cpp
 )
 
 
@@ -111,6 +113,8 @@ source_group("Source\\UI\\Buttons" FILES
 source_group("Source\\UI\\adsrSlider" FILES 
     Source/UI/adsrSlider/adsrSlider.h
     Source/UI/adsrSlider/adsrSlider.cpp
+    Source/UI/adsrSlider/adsrPoint.h
+    Source/UI/adsrSlider/adsrPoint.cpp
 )
 
 source_group("Source\\UI" FILES 
