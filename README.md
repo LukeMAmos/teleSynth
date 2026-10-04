@@ -8,4 +8,4 @@ To sculpt the end result of the synth I initially spent time in ableton building
 # UI design 
 Figma was used to sculpt the UI for the app, this allowed for fast prototyping of the design and how it would feel in the app form factor. 
 ## Initial Figma design 
-<img width="591" height="571" alt="Screenshot 2026-09-25 at 17 50 19" src="https://github.com/user-attachments/assets/b439d2c9-a8e4-47ed-881e-39cd41b90121" />
+
