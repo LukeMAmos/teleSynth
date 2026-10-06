@@ -4,6 +4,7 @@
 #include "UI/Sliders/Slider.h"
 #include "UI/ThemeColours.h"
 #include "UI/Buttons/SwitchScreen.h"
+#include "UI/adsrSlider/adsrSlider.h"
 
 //Forward declaration
 class teleSynthAudioProcessorEditor;
@@ -47,20 +48,21 @@ public:
     
     MenuPage(teleSynthAudioProcessor& p): audioProcessor(p){
         
+        addAndMakeVisible(adsrSlider);
         
         
     }
     
     void resized() override {
         
-        
+        adsrSlider.setBounds(125, 50, 250, 150); 
         
     }
     
 private:
     
     teleSynthAudioProcessor& audioProcessor;
-    
+    AdsrSlider adsrSlider; 
     
 };
 
