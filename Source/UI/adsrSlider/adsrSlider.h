@@ -18,7 +18,6 @@ public:
     void mouseDrag (const juce::MouseEvent& event) override;
     void mouseUp   (const juce::MouseEvent& event) override;
     
-    
     //Get specifc values
     float getAttack();
     float getDecay();

@@ -7,6 +7,7 @@ AdsrSlider::AdsrSlider(){
     for(auto& point : AdsrPoints){
         addAndMakeVisible(point);
         point.setInterceptsMouseClicks(false, false);
+        point.setSize(16, 16);
     }
     
 }
@@ -20,12 +21,14 @@ void AdsrSlider::paint(juce::Graphics& g){
     
     //draw all the dots and lines between them
     g.setColour(ThemeColours::orange());
-    //From bottom corner to attack
-    g.drawLine(getX(), getBottom(), AdsrPoints[0].getX(), AdsrPoints[0].getX());
     
-    for(int point = 0 ; point < 4 ; point++){
-        
-        g.drawLine(AdsrPoints[point].getX(), AdsrPoints[point].getX(), AdsrPoints[point + 1].getX(), AdsrPoints[point + 1 ].getX());
+    auto centrePoint = [this](int i ){return AdsrPoints[i].getBounds().getCentre().toFloat();};//lambda for getting the centre of a point
+    //From bottom corner to attack
+    juce::Point<float> start(bounds.getX() + 8 , bounds.getBottom());
+    g.drawLine(juce::Line<float>(start , centrePoint(0)), 2.0f);
+    
+    for(int point = 0 ; point < 3 ; point++){
+        g.drawLine(juce::Line<float>(centrePoint(point), centrePoint(point+1)), 2.0f);
     }
     
     
@@ -34,13 +37,19 @@ void AdsrSlider::paint(juce::Graphics& g){
 
 void AdsrSlider::resized(){
     
-    auto yMiddle = (getHeight()/2.0f);
-    auto xStart = getX()+10;
+    int radius = (int)(AdsrPoints[0].getDiameter() / 2.0f);
+    const int margin = radius + 5;
     
-    for(auto& point : AdsrPoints){
-        point.setBounds(xStart, yMiddle, 20, 20);
-        xStart = xStart + 15;
-    }
+    const int topY = margin;
+    const int bottomY = getHeight() - margin;
+    const int usable = getWidth()- 2* margin;
+    const int midY = getHeight() / 2;
+    
+    //Set the correct positions for all of the points
+    AdsrPoints[0].setCentrePosition(margin + (int)(usable * 0.2f), topY);
+    AdsrPoints[1].setCentrePosition(margin+ (int)(usable * 0.4f), midY);
+    AdsrPoints[2].setCentrePosition(margin + (int)(usable * 0.7f), midY);
+    AdsrPoints[3].setCentrePosition(getWidth()-margin, bottomY);
 
 }
 
@@ -50,14 +59,16 @@ void AdsrSlider::mouseDown (const juce::MouseEvent& event){
     auto pressX = event.getMouseDownX();
     auto pressY = event.getMouseDownY();
     
-    //Check its within 10 pixels of any dot
+
+    //Check its within 25 pixels of any dot
     
     for(auto& point: AdsrPoints){
         
-        auto dx = pressX - point.getX();
-        auto dy = pressY - point.getY();
+        auto centre = point.getBounds().getCentre();
+        auto dx = pressX - centre.x;
+        auto dy = pressY - centre.y;
         
-        if((dx*dx) + (dy*dy) <=150){
+        if((dx*dx) + (dy*dy) <=250){
             //target pressed
             point.setShouldBeMoved(true);
             //Once found the right point leave this function 
@@ -101,7 +112,7 @@ void AdsrSlider::mouseDrag (const juce::MouseEvent& event){
                 case Decay:
                 {
                     int minX = getXAt(0) + 1;
-                    int maxX = juce::jmax(minX , getXAt(2) + 1 );
+                    int maxX = juce::jmax(minX , getXAt(2) - 1 );
                     point.setCentrePosition(juce::jlimit(minX, maxX, boundedPos.getX()), getYAt(2));
                     break;
                 }
@@ -121,7 +132,7 @@ void AdsrSlider::mouseDrag (const juce::MouseEvent& event){
                 {
                     int minX = getXAt(2) + 1;
                     int maxX = juce::jmax(minX , getWidth() - margin);
-                    point.setCentrePosition(juce::jlimit(minX, maxX, boundedPos.getX()), bottomY); 
+                    point.setCentrePosition(juce::jlimit(minX, maxX, boundedPos.getX()), bottomY);
                     break;
                 }
                     
@@ -131,7 +142,7 @@ void AdsrSlider::mouseDrag (const juce::MouseEvent& event){
         }
         
     }
-    
+    repaint();
     
 }
 
@@ -146,3 +157,17 @@ void AdsrSlider::mouseUp   (const juce::MouseEvent& event){
         point.setShouldBeMoved(false);
     }
 }
+
+juce::ADSR::Parameters getADSRParameters(){
+    
+    juce::ADSR::Parameters AdsrParams;
+    
+    
+    
+    
+    
+    return AdsrParams; 
+}
+
+
+//Helper functions used by the getADSRParameters function
