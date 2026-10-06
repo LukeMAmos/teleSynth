@@ -28,9 +28,16 @@ public:
     juce::ADSR::Parameters getADSRParameters();
     
     //Helper function for converting pixel distance to time / gain
+    float pixelsToTime(float pixels , float minSeconds , float maxSeconds); // converts the number of pixels to a Time Value used by ADSR
+    
+    //Set this to update the adsrParams of the synth after they have been moved 
+    void setCallOnChange(std::function<void(juce::ADSR::Parameters adsrParams)> function);
     
 private:
     
+    std::function<void(juce::ADSR::Parameters adsrParams)> callOnChange;
+    
+    //the amount the box is reduced before drawing
     static constexpr int inset = 5;
     
     int radius; //dot radius
@@ -39,7 +46,7 @@ private:
     int bottomY; //lowest a dot can go
     int leftX; //most left a dot can go
     int rightX; //most right a dot can go 
-    int usable; //horizontal range
+    int usable; //horizontal range of the slider 
     int midY; //middle vertical 
     
     AdsrPoint AdsrPoints[4] = {Attack , Decay , Sustain , Release};

@@ -49,6 +49,8 @@ public:
     std::function<void(float frequency, float velocity , int touch)> getSynthStartNote();
     std::function<void(int touch)> getSynthStopNote();
     std::function<void(float frequency, float velocity , int touch)> getSynthMoveNote();
+    std::function<void(juce::ADSR::Parameters adsrParams)> getAdsrUpdate(); 
+    
     
 private:
     

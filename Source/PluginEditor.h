@@ -49,6 +49,7 @@ public:
     MenuPage(teleSynthAudioProcessor& p): audioProcessor(p){
         
         addAndMakeVisible(adsrSlider);
+        adsrSlider.setCallOnChange(audioProcessor.getAdsrUpdate()); 
         
         
     }

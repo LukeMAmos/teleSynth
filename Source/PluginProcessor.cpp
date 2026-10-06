@@ -111,3 +111,10 @@ std::function<void(float frequency, float velocity , int touch)> teleSynthAudioP
         sliderSynthesiser.updateValues(frequency, velocity, touch);
     };
 }
+
+std::function<void(juce::ADSR::Parameters adsrParams)> teleSynthAudioProcessor::getAdsrUpdate(){
+    
+    return [this](juce::ADSR::Parameters adsrParams){
+        sliderSynthesiser.setADSR(adsrParams);
+    };
+}

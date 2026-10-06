@@ -20,7 +20,7 @@ AdsrSlider::AdsrSlider(){
 void AdsrSlider::paint(juce::Graphics& g){
     
     //black border with grey centre 
-    auto bounds = getLocalBounds().reduced(5).toFloat();
+    auto bounds = getLocalBounds().reduced(inset).toFloat();
     g.setColour(ThemeColours::black());
     g.fillRoundedRectangle(bounds, 8);
     
@@ -163,11 +163,11 @@ void AdsrSlider::mouseUp   (const juce::MouseEvent& event){
 juce::ADSR::Parameters AdsrSlider::getADSRParameters(){
     
     juce::ADSR::Parameters AdsrParams;
-    
-    
-    
-    
-    
+    AdsrParams.attack = getAttack();
+    AdsrParams.decay = getDecay();
+    AdsrParams.sustain = getSustain();
+    AdsrParams.release = getRelease();
+
     return AdsrParams; 
 }
 
@@ -178,6 +178,7 @@ float AdsrSlider::getAttack(){
     float attack = 0.15f;
     //Attack is the distance between start and attack point
     auto pixelDif = AdsrPoints[0].getBounds().getCentreX() - leftX;
+    attack = pixelsToTime(pixelDif, 0.1, 6);
     return attack;
 }
 
@@ -186,15 +187,14 @@ float AdsrSlider::getDecay(){
     
     //difference between attack and decay
     auto pixelDif = (AdsrPoints[1].getBounds().getCentreX())-(AdsrPoints[0].getBounds().getCentreX());
-    
+    decay = pixelsToTime(pixelDif, 0.01, 4);
     return decay;
 }
 
 float AdsrSlider::getSustain(){
     float sustain = 0.1f;
     //y height from bottom
-    auto pixelDif = bottomY - AdsrPoints[2].getBounds().getCentreY();
-    
+    sustain = juce::jmap((float)AdsrPoints[2].getBounds().getCentreY(), (float)bottomY, (float)topY, 0.01f, 1.0f);
     return sustain;
 }
 
@@ -202,7 +202,21 @@ float AdsrSlider::getRelease(){
     float release = 0.0f;
     //distance between sustain and release
     auto pixelDif = AdsrPoints[3].getBounds().getCentreX() - AdsrPoints[2].getBounds().getCentreX(); 
-    
-    
+    release = pixelsToTime(pixelDif, 0.15, 6);
     return release;
+}
+
+
+
+float AdsrSlider::pixelsToTime(float pixels, float minSeconds , float maxSeconds){
+    
+    float time =juce::jlimit(0.0f, 1.0f, pixels / (float)juce::jmax(1 , usable)); //Normalises the range to 0 to 1
+    time = time * time;
+    
+    return juce::jmap(time , minSeconds , maxSeconds);
+}
+
+void AdsrSlider::setCallOnChange(std::function<void (juce::ADSR::Parameters)> function){
+    
+    callOnChange = function;
 }
