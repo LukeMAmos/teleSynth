@@ -10,6 +10,11 @@ AdsrSlider::AdsrSlider(){
         point.setSize(16, 16);
     }
     
+    radius = (int)(AdsrPoints[0].getDiameter() / 2.0f);
+    margin = radius + 5;
+    topY = margin;
+    leftX = margin;
+    
 }
 
 void AdsrSlider::paint(juce::Graphics& g){
@@ -24,7 +29,7 @@ void AdsrSlider::paint(juce::Graphics& g){
     
     auto centrePoint = [this](int i ){return AdsrPoints[i].getBounds().getCentre().toFloat();};//lambda for getting the centre of a point
     //From bottom corner to attack
-    juce::Point<float> start(bounds.getX() + 8 , bounds.getBottom());
+    juce::Point<float> start(leftX, bottomY);
     g.drawLine(juce::Line<float>(start , centrePoint(0)), 2.0f);
     
     for(int point = 0 ; point < 3 ; point++){
@@ -37,13 +42,14 @@ void AdsrSlider::paint(juce::Graphics& g){
 
 void AdsrSlider::resized(){
     
-    int radius = (int)(AdsrPoints[0].getDiameter() / 2.0f);
-    const int margin = radius + 5;
-    
-    const int topY = margin;
-    const int bottomY = getHeight() - margin;
-    const int usable = getWidth()- 2* margin;
-    const int midY = getHeight() / 2;
+    radius  = (int)(AdsrPoints[0].getDiameter() / 2.0f);
+    margin  = radius + inset;
+    leftX   = margin;
+    rightX  = getWidth() - margin;
+    topY    = margin;
+    bottomY = getHeight() - margin;
+    midY    = getHeight() / 2;
+    usable  = rightX - leftX;
     
     //Set the correct positions for all of the points
     AdsrPoints[0].setCentrePosition(margin + (int)(usable * 0.2f), topY);
@@ -87,13 +93,9 @@ void AdsrSlider::mouseDrag (const juce::MouseEvent& event){
         //if the point should be the point getting moved right now, then follow the mouse drag
         if(point.getShouldBeMoved()){
             
-            int radius = (int)(point.getDiameter() / 2.0f);
             //Bound the point inside the DraggableZone, the minimum it can go is the radius of the circle the max is the width minus the radius in both up and down direction
             juce::Point<int> boundedPos = event.getPosition();
             //Margins for positioning the ADSR slider points correctly
-            const int margin = radius + 5;
-            const int topY = margin;
-            const int bottomY = getHeight() - margin;
             
             //Lambda Functions for getting the centre of a specific point
             std::function<int(int i)> getXAt = [this](int i){return AdsrPoints[i].getBounds().getCentreX(); };
@@ -104,8 +106,8 @@ void AdsrSlider::mouseDrag (const juce::MouseEvent& event){
                     //Bound so it cant go lower than the corner or further than decay
                 case Attack:
                 {
-                    int maxX = juce::jmax(margin, getXAt(1) - (radius * 2)); //work out the furtherest right the attack point can go, this pre-jmax ensures that the next jlimit always has a smaller then larger number
-                    point.setCentrePosition(juce::jlimit(margin, maxX, boundedPos.getX()), topY);
+                    int maxX = juce::jmax(leftX, getXAt(1) - (radius * 2)); //work out the furtherest right the attack point can go, this pre-jmax ensures that the next jlimit always has a smaller then larger number
+                    point.setCentrePosition(juce::jlimit(leftX, maxX, boundedPos.getX()), topY);
                     break;
                 }
                     //Bound so cant go less than attack , cant go past release, Y position is equal to sustain
@@ -158,7 +160,7 @@ void AdsrSlider::mouseUp   (const juce::MouseEvent& event){
     }
 }
 
-juce::ADSR::Parameters getADSRParameters(){
+juce::ADSR::Parameters AdsrSlider::getADSRParameters(){
     
     juce::ADSR::Parameters AdsrParams;
     
@@ -171,3 +173,36 @@ juce::ADSR::Parameters getADSRParameters(){
 
 
 //Helper functions used by the getADSRParameters function
+
+float AdsrSlider::getAttack(){
+    float attack = 0.15f;
+    //Attack is the distance between start and attack point
+    auto pixelDif = AdsrPoints[0].getBounds().getCentreX() - leftX;
+    return attack;
+}
+
+float AdsrSlider::getDecay(){
+    float decay = 0.0f;
+    
+    //difference between attack and decay
+    auto pixelDif = (AdsrPoints[1].getBounds().getCentreX())-(AdsrPoints[0].getBounds().getCentreX());
+    
+    return decay;
+}
+
+float AdsrSlider::getSustain(){
+    float sustain = 0.1f;
+    //y height from bottom
+    auto pixelDif = bottomY - AdsrPoints[2].getBounds().getCentreY();
+    
+    return sustain;
+}
+
+float AdsrSlider::getRelease(){
+    float release = 0.0f;
+    //distance between sustain and release
+    auto pixelDif = AdsrPoints[3].getBounds().getCentreX() - AdsrPoints[2].getBounds().getCentreX(); 
+    
+    
+    return release;
+}

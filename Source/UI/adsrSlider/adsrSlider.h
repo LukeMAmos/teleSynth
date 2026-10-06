@@ -27,7 +27,20 @@ public:
     //Get the whole group of values spefically ready to passed through
     juce::ADSR::Parameters getADSRParameters();
     
+    //Helper function for converting pixel distance to time / gain
+    
 private:
+    
+    static constexpr int inset = 5;
+    
+    int radius; //dot radius
+    int margin; //keeps dots within the bounds
+    int topY; //highest a dot can go
+    int bottomY; //lowest a dot can go
+    int leftX; //most left a dot can go
+    int rightX; //most right a dot can go 
+    int usable; //horizontal range
+    int midY; //middle vertical 
     
     AdsrPoint AdsrPoints[4] = {Attack , Decay , Sustain , Release};
     
