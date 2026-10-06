@@ -155,6 +155,11 @@ void AdsrSlider::mouseUp   (const juce::MouseEvent& event){
     
     for(auto& point : AdsrPoints){
         
+        if(point.getShouldBeMoved()){
+            //if there was a movement
+            callOnChange(getADSRParameters());
+        }
+        
         //set all points to false
         point.setShouldBeMoved(false);
     }
@@ -178,7 +183,7 @@ float AdsrSlider::getAttack(){
     float attack = 0.15f;
     //Attack is the distance between start and attack point
     auto pixelDif = AdsrPoints[0].getBounds().getCentreX() - leftX;
-    attack = pixelsToTime(pixelDif, 0.1, 6);
+    attack = pixelsToTime(pixelDif, 0.1f, 6.0f);
     return attack;
 }
 
@@ -187,7 +192,7 @@ float AdsrSlider::getDecay(){
     
     //difference between attack and decay
     auto pixelDif = (AdsrPoints[1].getBounds().getCentreX())-(AdsrPoints[0].getBounds().getCentreX());
-    decay = pixelsToTime(pixelDif, 0.01, 4);
+    decay = pixelsToTime(pixelDif, 0.01f, 4.0f);
     return decay;
 }
 
@@ -202,7 +207,7 @@ float AdsrSlider::getRelease(){
     float release = 0.0f;
     //distance between sustain and release
     auto pixelDif = AdsrPoints[3].getBounds().getCentreX() - AdsrPoints[2].getBounds().getCentreX(); 
-    release = pixelsToTime(pixelDif, 0.15, 6);
+    release = pixelsToTime(pixelDif, 0.15f, 6.0f);
     return release;
 }
 
