@@ -55,6 +55,7 @@ juce_generate_juce_header(teleSynth)
 target_include_directories(teleSynth PRIVATE 
     Source
     Source/UI
+    Source/Effects
 )
 
 target_sources(teleSynth
@@ -80,6 +81,10 @@ target_sources(teleSynth
     Source/UI/adsrSlider/adsrSlider.cpp
     Source/UI/adsrSlider/adsrPoint.h
     Source/UI/adsrSlider/adsrPoint.cpp
+    Source/UI/Menus/FilterMenu.h
+    Source/UI/Menus/FilterMenu.cpp
+    Source/Effects/Filter/BiquadFilter.h
+    Source/Effects/Filter/BiquadFilter.cpp
 )
 
 
@@ -119,6 +124,16 @@ source_group("Source\\UI\\adsrSlider" FILES
 
 source_group("Source\\UI" FILES 
     Source/UI/ThemeColours.h
+)
+
+source_group("Source\\UI\\Menus" FILES
+    Source/UI/Menus/FilterMenu.h
+    Source/UI/Menus/FilterMenu.cpp
+)
+
+source_group("Source\\Effects\\Filter" FILES
+    Source/Effects/Filter/BiquadFilter.h
+    Source/Effects/Filter/BiquadFilter.cpp
 )
 
 source_group("Source\\Synth" FILES 
