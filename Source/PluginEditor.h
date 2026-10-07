@@ -53,7 +53,6 @@ public:
         
         
     }
-    
     void resized() override {
         
         adsrSlider.setBounds(125, 50, 250, 150); 

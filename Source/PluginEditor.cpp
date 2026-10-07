@@ -42,7 +42,7 @@ void teleSynthAudioProcessorEditor::paint (juce::Graphics& g){
 
 void teleSynthAudioProcessorEditor::resized(){
     
-    switchScreen.setBounds(25, 50, 100, 100);
+    switchScreen.setBounds(15, 50, 100, 100);
     
     auto bounds = getLocalBounds();
     

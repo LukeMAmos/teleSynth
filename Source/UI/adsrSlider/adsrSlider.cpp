@@ -20,9 +20,13 @@ AdsrSlider::AdsrSlider(){
 void AdsrSlider::paint(juce::Graphics& g){
     
     //black border with grey centre 
-    auto bounds = getLocalBounds().reduced(inset).toFloat();
+    auto bounds = getLocalBounds();
+    //Drop shadow
+    g.setColour(ThemeColours::grey());
+    g.fillRoundedRectangle(bounds.reduced(2).toFloat(), 8);
+    bounds = bounds.reduced(inset);
     g.setColour(ThemeColours::black());
-    g.fillRoundedRectangle(bounds, 8);
+    g.fillRoundedRectangle(bounds.toFloat(), 8);
     
     //draw all the dots and lines between them
     g.setColour(ThemeColours::orange());
