@@ -35,7 +35,7 @@ private:
     juce::ADSR::Parameters adsrParams;
     
     std::atomic<bool> valueUpdateNeeded;
-    std::atomic<float> xValueSlider;
-    std::atomic<float> yValueSlider;
+    std::atomic<float> frequencyVal;
+    std::atomic<float> velocityVal;
 };
 

@@ -34,8 +34,8 @@ void SliderSynthVoice::updateValues(float frequency , float velocity){
     
     //Save the values and set the update flag to true
     valueUpdateNeeded = true;
-    xValueSlider = velocity;
-    yValueSlider = frequency;
+    velocityVal = velocity;
+    frequencyVal = frequency;
 }
 
 void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples){
@@ -44,8 +44,8 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     
     //update the values before they are used to render the next audio block
     if(valueUpdateNeeded){
-        OSC.setFrequency(yValueSlider);
-        DBG(yValueSlider); 
+        OSC.setFrequency(frequencyVal);
+        DBG(frequencyVal);
         valueUpdateNeeded = false;
     }
     
