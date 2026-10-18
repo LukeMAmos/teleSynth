@@ -55,12 +55,11 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     //Set the position of the point using the bounded position of the touch event
     activePoints[slot]->setCentrePosition(boundedPos.getX(), boundedPos.getY());
     
-    //Normalise the location of the dot in the DraggableZone and then call the drag start function, repeated process in the drag function
-    float normX = boundedPos.getX();
-    float normY = boundedPos.getY();
-    normXY(normX, normY); //calculates the normalisation and then sets the variables to the normalised value
+    float XVal = boundedPos.getX();
+    float YVal = boundedPos.getY();
+    normXY(XVal, YVal);
+    callOnDragStart(XVal, YVal, touchIndex);
     
-    callOnDragStart(normX, normY, touchIndex);
 }
 
 void DraggableZone::mouseDrag (const juce::MouseEvent& event){
@@ -79,12 +78,10 @@ void DraggableZone::mouseDrag (const juce::MouseEvent& event){
     
     activePoints[slot]->setCentrePosition(boundedPos.getX() , boundedPos.getY());
     
-    //Normalise the location of the dot in the DraggableZone and then call the drag start function, repeated process in the drag function
-    float normX = boundedPos.getX();
-    float normY = boundedPos.getY();
-    normXY(normX, normY); //calculates the normalisation and then sets the variables to the normalised value
-    
-    callOnDragStart(normX, normY, touchIndex);
+    float XVal = boundedPos.getX();
+    float YVal = boundedPos.getY();
+    normXY(XVal, YVal);
+    callOnDragMove(XVal, YVal, touchIndex);
 }
 
 void DraggableZone::mouseUp   (const juce::MouseEvent& event){
@@ -130,11 +127,11 @@ void DraggableZone::setEndFunction(std::function<void(int touch)> function){
     
 }
 
-//Normalise the values to then be used to trigger the start and moving of notes
-void DraggableZone::normXY(float& XVal , float& YVal){
+void DraggableZone::normXY(float& XVal , float& YVal ){
     
-    const float lo = (float)(radius+5);
-    const float hi = (float)(getWidth() - radius - 5);
-    XVal = (XVal - lo ) / (hi - lo );
-    YVal= 1.0f - (YVal - lo) / ((float)(getHeight() - radius - 5) - lo);
+    float lo = (float)(radius + 5);
+    float hi = (float)(getWidth() - radius - 5);
+    XVal = (XVal - lo) / (hi - lo);
+    YVal = 1.0f - (YVal - lo) / ((float)(getHeight() - radius - 5) - lo);
+    
 }

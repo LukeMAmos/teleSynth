@@ -88,10 +88,14 @@ void teleSynthAudioProcessor::setStateInformation (const void* data, int sizeInB
     
 }
 
-std::function<void(float frequency, float velocity , int touch)> teleSynthAudioProcessor::getSynthStartNote(){
+std::function<void(float x, float y , int touch)> teleSynthAudioProcessor::getSynthStartNote(){
     
-    return [this](float frequency, float velocity, int touch) {
-            sliderSynthesiser.startNote(frequency, velocity, touch);
+    return [this](float x, float y, int touch) {
+        
+        float frequency = SynthRange::normToFreq(y);
+        float velocity = x;
+        
+        sliderSynthesiser.startNote(frequency, velocity, touch);
         };
     
 }
@@ -105,16 +109,26 @@ std::function<void(int touch)> teleSynthAudioProcessor::getSynthStopNote(){
 }
 
 
-std::function<void(float frequency, float velocity , int touch)> teleSynthAudioProcessor::getSynthMoveNote(){
+std::function<void(float x, float y , int touch)> teleSynthAudioProcessor::getSynthMoveNote(){
     
-    return [this](float frequency, float velocity, int touch){
+    return [this](float x, float y, int touch){
+        
+        float frequency = SynthRange::normToFreq(y);
+        float velocity = x;
+        
         sliderSynthesiser.updateValues(frequency, velocity, touch);
+        
     };
 }
 
 std::function<void(juce::ADSR::Parameters adsrParams)> teleSynthAudioProcessor::getAdsrUpdate(){
     
     return [this](juce::ADSR::Parameters adsrParams){
+        
         sliderSynthesiser.setADSR(adsrParams);
     };
 }
+
+
+
+

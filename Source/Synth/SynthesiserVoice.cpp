@@ -45,7 +45,8 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     //update the values before they are used to render the next audio block
     if(valueUpdateNeeded){
         OSC.setFrequency(yValueSlider);
-        valueUpdateNeeded = false; 
+        DBG(yValueSlider); 
+        valueUpdateNeeded = false;
     }
     
     

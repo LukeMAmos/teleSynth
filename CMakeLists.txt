@@ -85,6 +85,7 @@ target_sources(teleSynth
     Source/UI/Menus/FilterMenu.cpp
     Source/Effects/Filter/BiquadFilter.h
     Source/Effects/Filter/BiquadFilter.cpp
+    Source/Synth/SynthRange.h
 )
 
 
@@ -141,6 +142,7 @@ source_group("Source\\Synth" FILES
     Source/Synth/Synthesiser.cpp
     Source/Synth/SynthesiserVoice.h
     Source/Synth/SynthesiserVoice.cpp
+    Source/Synth/SynthRange.h
 )
 
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "Synth/Synthesiser.h"
+#include "Synth/SynthRange.h"
 
 
 class teleSynthAudioProcessor : public juce::AudioProcessor
@@ -46,16 +47,19 @@ public:
 
     //Synthesiser pass functions so that it can be reached by the draggable zone componenent in the editor for passing functions
     //need to access to startNote , StopNOte and update values
-    std::function<void(float frequency, float velocity , int touch)> getSynthStartNote();
+    std::function<void(float x, float y , int touch)> getSynthStartNote();
     std::function<void(int touch)> getSynthStopNote();
-    std::function<void(float frequency, float velocity , int touch)> getSynthMoveNote();
-    std::function<void(juce::ADSR::Parameters adsrParams)> getAdsrUpdate(); 
+    std::function<void(float x, float y , int touch)> getSynthMoveNote();
+    std::function<void(juce::ADSR::Parameters adsrParams)> getAdsrUpdate();
     
     
 private:
     
     SliderSynthesiser sliderSynthesiser;
+
+
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessor)
+
 };
 
