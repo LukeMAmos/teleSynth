@@ -25,26 +25,38 @@ public:
     //Calls the private FFT functions and fills the array of mipmap tables
     void setAllMipmapTables();
     
-    //Called by the voices to calculate which index in the array to use to playback 
+    //Called by the voices to calculate which index in the array to use to playback
     
 private:
     
     static constexpr int maxVoices = 5;
     static constexpr int wavetableSamples = 2048;
     static constexpr int fullSizeTable = wavetableSamples * 2;
+    static constexpr int nMinMapTables = 8; //This is equal to the number of octaves 
+    
+    double sampleRate;
+    //FFT object
+    static constexpr int fftOrder = 11; //2048, the length of the wavetable Samples
+    juce::dsp::FFT fft{fftOrder};
     
     //array of samples for the original wavetable samples, 2*size to perform the forward and inverse FFT
+    std::array<float, fullSizeTable> fullSizeWavetableSamples;
+    std::array<float, fullSizeTable> forwardFFTResults;
+    
+    //Final Samples
+    std::array<std::array<float, wavetableSamples > ,nMinMapTables > minMapTables;
     
     //Array of Voices
     SliderSynthVoice sliderVoices[maxVoices];
     //Array to hold which touch is linked to which voice, the position is the voice and the index is the Touch
     int voiceToTouch[maxVoices];
     
+    //Function for finding and returning the place of the free voice 
     int findFreeVoice();
     
     //Functions for performing the forward and Inverse FFTs to build an array of bandlimited sample arrays
     std::array<float ,fullSizeTable> computeForwardFFT(std::array<float, fullSizeTable > wavetable);
-    std::array<float, wavetableSamples> computeInverseFFT(std::array<float, fullSizeTable> wavetable , float cutoffFreq);
+    std::array<float, wavetableSamples> computeInverseFFT(std::array<float, fullSizeTable> wavetable , float highestFundamentalFreq);
     
     
     

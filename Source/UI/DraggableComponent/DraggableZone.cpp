@@ -40,15 +40,12 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     
     //Make a new active point at the index of the slot and give it a diameter
     activePoints[slot] = std::make_unique<DraggableComponent>();
-    int diameter = 50;
     activePoints[slot]->setDiameter(diameter);
     
     //Map the touch to slot array to the correct slot
     touchToSlot[touchIndex] = slot;
     //Make the current touch point visible
     addAndMakeVisible(*activePoints[slot]);
-    
-    int radius = (int)(activePoints[slot]->getDiameter() / 2.0f);
     //Bound the point inside the DraggableZone, the minimum it can go is the radius of the circle the max is the width minus the radius in both up and down direction
     juce::Point<int> boundedPos = event.getPosition();
     boundedPos.setX(juce::jlimit(radius+5, getWidth() - radius - 5, boundedPos.getX()));
@@ -58,7 +55,12 @@ void DraggableZone::mouseDown (const juce::MouseEvent& event){
     //Set the position of the point using the bounded position of the touch event
     activePoints[slot]->setCentrePosition(boundedPos.getX(), boundedPos.getY());
     
-    callOnDragStart(boundedPos.getX(), boundedPos.getY(), touchIndex);
+    //Normalise the location of the dot in the DraggableZone and then call the drag start function, repeated process in the drag function
+    float normX = boundedPos.getX();
+    float normY = boundedPos.getY();
+    normXY(normX, normY); //calculates the normalisation and then sets the variables to the normalised value
+    
+    callOnDragStart(normX, normY, touchIndex);
 }
 
 void DraggableZone::mouseDrag (const juce::MouseEvent& event){
@@ -70,8 +72,6 @@ void DraggableZone::mouseDrag (const juce::MouseEvent& event){
     //Check the slot is being used currently
     const int slot = touchToSlot[touchIndex];
     if(slot == -1 || activePoints[slot] == nullptr) return;
-    
-    int radius = (int)(activePoints[slot]->getDiameter() / 2.0f);
     //Bound the point inside the DraggableZone, the minimum it can go is the radius of the circle the max is the width minus the radius in both up and down direction
     juce::Point<int> boundedPos = event.getPosition();
     boundedPos.setX(juce::jlimit(radius+5, getWidth() - radius - 5, boundedPos.getX()));
@@ -79,7 +79,12 @@ void DraggableZone::mouseDrag (const juce::MouseEvent& event){
     
     activePoints[slot]->setCentrePosition(boundedPos.getX() , boundedPos.getY());
     
-    callOnDragMove(boundedPos.getX(), boundedPos.getY(), touchIndex);
+    //Normalise the location of the dot in the DraggableZone and then call the drag start function, repeated process in the drag function
+    float normX = boundedPos.getX();
+    float normY = boundedPos.getY();
+    normXY(normX, normY); //calculates the normalisation and then sets the variables to the normalised value
+    
+    callOnDragStart(normX, normY, touchIndex);
 }
 
 void DraggableZone::mouseUp   (const juce::MouseEvent& event){
@@ -123,4 +128,13 @@ void DraggableZone::setEndFunction(std::function<void(int touch)> function){
     
     onDragEnd = function;
     
+}
+
+//Normalise the values to then be used to trigger the start and moving of notes
+void DraggableZone::normXY(float& XVal , float& YVal){
+    
+    const float lo = (float)(radius+5);
+    const float hi = (float)(getWidth() - radius - 5);
+    XVal = (XVal - lo ) / (hi - lo );
+    YVal= 1.0f - (YVal - lo) / ((float)(getHeight() - radius - 5) - lo);
 }

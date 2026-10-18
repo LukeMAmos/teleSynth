@@ -10,6 +10,8 @@ SliderSynthesiser::SliderSynthesiser(){
     adsrParams.sustain = 0.6f;
     adsrParams.release = 0.5f;
     setADSR(adsrParams);
+    
+
 }
 
 void SliderSynthesiser::initaliseVoices(double sampleRate , int samplesPerBlock , int numChannels){
@@ -19,6 +21,8 @@ void SliderSynthesiser::initaliseVoices(double sampleRate , int samplesPerBlock 
         voice.initaliseVoice(sampleRate, samplesPerBlock, numChannels); 
         
     }
+    
+    this->sampleRate = sampleRate;
 }
 void SliderSynthesiser::startNote(float frequency, float velocity , int touch){
     
@@ -108,14 +112,6 @@ void SliderSynthesiser::setADSR(juce::ADSR::Parameters adsrParams){
 }
 
 
-//Set the wavetable osc
-void SliderSynthesiser::setOSCWavetable(){
-    
-    
-    
-}
-
-
 int SliderSynthesiser::findFreeVoice(){
     
     for(int i = 0; i < maxVoices ; i++){
@@ -129,4 +125,62 @@ int SliderSynthesiser::findFreeVoice(){
     //If no voices are available return minus 1
     return -1;
 }
+
+//Setting up the Oscillator
+void SliderSynthesiser::setWavetableSamples(std::vector<float> samples){
+    
+    if(samples.size() < 2048)
+        return;
+    
+    //If the vector of samples is greater than 2048 only take the first 2048 samples
+    std::copy_n(samples.begin(), 2048, fullSizeWavetableSamples.begin());
+    
+}
+
+//Calls the private FFT functions and fills the array of mipmap tables
+void SliderSynthesiser::setAllMipmapTables(){
+    
+    //Calls the forwardFFT saves the result to results array
+    forwardFFTResults = computeForwardFFT(fullSizeWavetableSamples);
+    
+    //Then take the results and compute an inverse for each octave
+    for(int table = 0; table < nMinMapTables; table++){
+        //So for each table need to calculate the max frequency inside the octave, then use this to bandlimit the inverse FFT
+        float highestFreq;
+        
+        minMapTables[(size_t)table] = computeInverseFFT(forwardFFTResults, highestFreq);
+    }
+    
+}
+
+//This doesnt replace the data you input it takes a copy which you can save
+std::array<float ,SliderSynthesiser::fullSizeTable> SliderSynthesiser::computeForwardFFT(std::array<float, SliderSynthesiser::fullSizeTable > wavetable){
+    
+    //Takes the input wavetable array and returns the wavetable after the FFT has been applied to it , as an array of floats
+    fft.performRealOnlyForwardTransform(wavetable.data());
+    
+    return wavetable; 
+}
+
+std::array<float, SliderSynthesiser::wavetableSamples> SliderSynthesiser::computeInverseFFT(std::array<float, SliderSynthesiser::fullSizeTable> wavetable , float highestFundamentalFreq){
+    
+    //Takes the result of the computeForwardFFT as a copy each time and then  computes the inverse FFT after zeroing the bins after the cutoff frequencey point
+    //Calculate the max_harmonic
+    int maxHarmonic = (int)std::floor(sampleRate / (2 * highestFundamentalFreq));
+    
+    //Calculate the bin position to start cutting off at and zero those bins
+    int binZeroStart = maxHarmonic + 1 ;
+    std::fill(wavetable.begin() + binZeroStart, wavetable.end(), 0);
+    
+    //Take the wavetable and perform the inverse FFT
+    fft.performRealOnlyInverseTransform(wavetable.data());
+    
+    //Trim the first 2048 float values and return
+    std::array<float, wavetableSamples> returnVal;
+    std::copy_n(wavetable.begin() , wavetableSamples , returnVal.begin());
+    
+    return returnVal;
+}
+
+
 

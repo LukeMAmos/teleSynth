@@ -27,10 +27,14 @@ public:
     void callOnDragEnd(int touch ){onDragEnd(touch);}
     
 private:
-    
+    //Max touches  , max number of voices at one time
     static constexpr int maxTouches = 5;
     int touchToSlot[maxTouches];
     std::unique_ptr<DraggableComponent> activePoints[maxTouches];
+    
+    //Diameter of the dots 
+    int diameter = 50;
+    int radius = (int)(diameter / 2.0f);
     
     int findFreeSlot() const;
     
@@ -38,4 +42,7 @@ private:
     std::function<void(float xpos,float ypos, int touch )> onDragStart;
     std::function<void(float xpos,float ypos, int touch )> onDragMove;
     std::function<void(int touch)> onDragEnd;
+    
+    //Normalising function used by start and drag
+    void normXY(float& XVal , float& YVal ); 
 };
