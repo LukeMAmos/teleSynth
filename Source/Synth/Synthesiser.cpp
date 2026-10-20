@@ -4,6 +4,7 @@ SliderSynthesiser::SliderSynthesiser(){
     
     std::fill(std::begin(voiceToTouch), std::end(voiceToTouch), -1);
     
+    //ADSR Paramters INIT
     juce::ADSR::Parameters adsrParams;
     adsrParams.attack = 0.8f;
     adsrParams.decay = 0.2f;
@@ -11,10 +12,12 @@ SliderSynthesiser::SliderSynthesiser(){
     adsrParams.release = 0.5f;
     setADSR(adsrParams);
     
-
+    //Fill on initalisation with a saw Wave
+    auto generatedWave = SynthRange::generateSaw(SynthRange::wavetableSamples, (int)((SynthRange::wavetableSamples)/(2.0f)));
+    std::copy(generatedWave.begin(), generatedWave.end(), fullSizeWavetableSamples);
 }
 
-void SliderSynthesiser::initaliseVoices(double sampleRate , int samplesPerBlock , int numChannels){
+void SliderSynthesiser::initaliseVoices(double sampleRateIn , int samplesPerBlock , int numChannels){
     
     for(auto& voice : sliderVoices){
         
@@ -22,13 +25,16 @@ void SliderSynthesiser::initaliseVoices(double sampleRate , int samplesPerBlock 
         
     }
     
-    this->sampleRate = sampleRate;
+    this->sampleRate = sampleRateIn;
+    //Initalised the wave to be a saw wave and now need to compute the mipmap waves
+    setAllMipmapTables();
+    
 }
 void SliderSynthesiser::startNote(float frequency, float velocity , int touch){
     
     //find a free voice , then use the position of the free voice to call start note on the voice 
     int freeVoice = findFreeVoice();
-    if(freeVoice < 0 || freeVoice > maxVoices )
+    if(freeVoice < 0 || freeVoice > SynthRange::maxVoices )
         //No free voices available 
         return;
     
@@ -43,7 +49,7 @@ void SliderSynthesiser::stopNote(int touch){
     
     //Call the stop note on the specific touch, dont free the voice here as the release stage may still be active
     int voice = -1;
-    for(int i = 0; i < maxVoices ; i++){
+    for(int i = 0; i < SynthRange::maxVoices ; i++){
         
         if(voiceToTouch[i] == touch){
             //Find the voice we need to release
@@ -62,7 +68,7 @@ void SliderSynthesiser::stopNote(int touch){
 
 void SliderSynthesiser::updateValues(float frequency, float velocity, int touch){
     
-    for(int voice = 0; voice < maxVoices ; voice++ ){
+    for(int voice = 0; voice < SynthRange::maxVoices ; voice++ ){
         
         if(voiceToTouch[voice] == touch){
             //Found the correct voice now need to call to update the specific values of that voice
@@ -81,7 +87,7 @@ void SliderSynthesiser::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, 
     
     juce::AudioBuffer<float> tempBuffer(outputBuffer.getNumChannels() , numSamples);
     
-    for(int voice = 0 ; voice < maxVoices ; voice++){
+    for(int voice = 0 ; voice < SynthRange::maxVoices ; voice++){
         
         if(sliderVoices[voice].isActive()){
             
@@ -104,7 +110,7 @@ void SliderSynthesiser::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, 
 //Set the ADSR on each of the voices
 void SliderSynthesiser::setADSR(juce::ADSR::Parameters adsrParams){
     
-    for(int i = 0; i < maxVoices ; i++){
+    for(int i = 0; i < SynthRange::maxVoices ; i++){
         
         sliderVoices[i].setADSR(adsrParams); 
     }
@@ -114,7 +120,7 @@ void SliderSynthesiser::setADSR(juce::ADSR::Parameters adsrParams){
 
 int SliderSynthesiser::findFreeVoice(){
     
-    for(int i = 0; i < maxVoices ; i++){
+    for(int i = 0; i < SynthRange::maxVoices ; i++){
         
         if(!sliderVoices[i].isActive()){
             //if the voice is inactive then return i
@@ -144,17 +150,22 @@ void SliderSynthesiser::setAllMipmapTables(){
     forwardFFTResults = computeForwardFFT(fullSizeWavetableSamples);
     
     //Then take the results and compute an inverse for each octave
-    for(int table = 0; table < nMinMapTables; table++){
+    for(int table = 0; table < SynthRange::nMinMapTables; table++){
         //So for each table need to calculate the max frequency inside the octave, then use this to bandlimit the inverse FFT
-        float highestFreq;
+        float highestFreq = (SynthRange::freqMax) * (std::pow(0.5f, 3.0f));
         
         minMapTables[(size_t)table] = computeInverseFFT(forwardFFTResults, highestFreq);
     }
     
 }
 
+
+
+
+//__Used by the set all mipmapTables function__
+
 //This doesnt replace the data you input it takes a copy which you can save
-std::array<float ,SliderSynthesiser::fullSizeTable> SliderSynthesiser::computeForwardFFT(std::array<float, SliderSynthesiser::fullSizeTable > wavetable){
+std::array<float ,SynthRange::fullSizeTable> SliderSynthesiser::computeForwardFFT(std::array<float, SynthRange::fullSizeTable > wavetable){
     
     //Takes the input wavetable array and returns the wavetable after the FFT has been applied to it , as an array of floats
     fft.performRealOnlyForwardTransform(wavetable.data());
@@ -162,7 +173,7 @@ std::array<float ,SliderSynthesiser::fullSizeTable> SliderSynthesiser::computeFo
     return wavetable; 
 }
 
-std::array<float, SliderSynthesiser::wavetableSamples> SliderSynthesiser::computeInverseFFT(std::array<float, SliderSynthesiser::fullSizeTable> wavetable , float highestFundamentalFreq){
+std::array<float, SynthRange::wavetableSamples> SliderSynthesiser::computeInverseFFT(std::array<float, SynthRange::fullSizeTable> wavetable , float highestFundamentalFreq){
     
     //Takes the result of the computeForwardFFT as a copy each time and then  computes the inverse FFT after zeroing the bins after the cutoff frequencey point
     //Calculate the max_harmonic
@@ -176,8 +187,8 @@ std::array<float, SliderSynthesiser::wavetableSamples> SliderSynthesiser::comput
     fft.performRealOnlyInverseTransform(wavetable.data());
     
     //Trim the first 2048 float values and return
-    std::array<float, wavetableSamples> returnVal;
-    std::copy_n(wavetable.begin() , wavetableSamples , returnVal.begin());
+    std::array<float, SynthRange::wavetableSamples> returnVal;
+    std::copy_n(wavetable.begin() , SynthRange::wavetableSamples , returnVal.begin());
     
     return returnVal;
 }

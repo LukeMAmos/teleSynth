@@ -1,4 +1,5 @@
 #include <JuceHeader.h>
+#include "SynthRange.h"
 
 class SliderSynthVoice {
     
@@ -12,30 +13,37 @@ public:
     //Note on and off functions, as well as a function to update the frequency of the note
     void startNote(float frequency , float velocity);
     void stopNote();
-    void updateValues(float frequency, float velocity); 
+    void updateValues(float frequency, float velocity); //Update the values on move of the draggable component
     
     //Need to make the frequency update smooth
     void updateNoteFrequency(float frequency);
     
     //Rendering the voice
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample , int numSamples);
-    
-    //update the oscillator used from the random Wavetable generator 
-    void updateOSCWavetable();
-    
     void setADSR(juce::ADSR::Parameters adsrParamsIn);
+    bool isActive(); //Checks if the voice is still active
     
-    bool isActive();
+    //Function for passing through pointer to minMapTables
+    void setMinMapTables(std::array<std::array<float, SynthRange::wavetableSamples > ,SynthRange::nMinMapTables >*  tableLocations);
+    
     
 private:
     
     //Inital Implementation using a simple SineWave
-    juce::dsp::Oscillator<float> OSC;
     juce::ADSR ADSR;
     juce::ADSR::Parameters adsrParams;
+    double sampleRate{0.0}; 
     
-    std::atomic<bool> valueUpdateNeeded;
-    std::atomic<float> frequencyVal;
-    std::atomic<float> velocityVal;
+    //Pointer to the Synthesiser tables
+    std::array<std::array<float, SynthRange::wavetableSamples > ,SynthRange::nMinMapTables >* minMapTablesLocation = nullptr;
+    
+    //Varibles needed for ech synth voice
+    std::atomic<bool> valueUpdateNeeded{false};
+    std::atomic<float> targetFreq{440.0f};
+    std::atomic<float> targetVelocity{1.0f};
+    double phase{0.0};
+    double phaseIncre{0.0};
+    int currentTable{1};
+    
 };
 
