@@ -3,7 +3,6 @@
 
 SliderSynthVoice::SliderSynthVoice(){
     
-    OSC.initialise([](float x) { return x < 0.0f ? -1.0f : 1.0f; }); 
     
 }
 
@@ -17,7 +16,7 @@ void SliderSynthVoice::initaliseVoice(double sampleRate , int samplesPerBlock , 
     spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
     spec.numChannels = (juce::uint32)numChannels;
     
-
+    
     ADSR.setSampleRate(spec.sampleRate);
     
 }
@@ -28,6 +27,7 @@ void SliderSynthVoice::startNote(float freqeuncy, float velocity){
     phase = 0.0;
     targetFreq = freqeuncy;
     targetVelocity = velocity;
+    valueUpdateNeeded = true;
     ADSR.noteOn();
 }
 
@@ -54,7 +54,6 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     //update the values before they are used to render the next audio block
     //If Values need updating, otherwise skip block
     if(valueUpdateNeeded){
-        DBG(targetFreq.load());
         currentTable = SynthRange::calcTableIndex(targetFreq.load()); //Calculate the table needed based on the current frequency playing
         valueUpdateNeeded = false;
         phaseIncre = ((targetFreq.load() * SynthRange::wavetableSamples) / (sampleRate)); 
@@ -71,7 +70,7 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
         //Interpolating the value using linear interpolation
         const float a = (*minMapTablesLocation)[(size_t)currentTable][(size_t)i0];
         const float b = (*minMapTablesLocation)[(size_t)currentTable][(size_t)i1];
-        channelOne[i] = (float)(0.5f * (a * frac * (b-a)));
+        channelOne[i] = (float)(0.5f * (a + frac * (b-a)));
         
         //Increment phase
         phase += phaseIncre;
@@ -83,7 +82,7 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     for(int ch = 1; ch < outputBuffer.getNumChannels() ; ch++)
         outputBuffer.copyFrom(ch , startSample , outputBuffer ,0 , startSample , numSamples );
     
-    ADSR.applyEnvelopeToBuffer(outputBuffer, 0, numSamples);
+    ADSR.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
     outputBuffer.applyGain(targetVelocity); 
 }
 

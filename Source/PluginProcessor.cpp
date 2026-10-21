@@ -28,8 +28,9 @@ bool teleSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void teleSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiBuffer) {
     
     juce::ScopedNoDenormals noDenormals;
+    buffer.clear();
     
-    sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples()); 
+    sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples());
     
 }
 

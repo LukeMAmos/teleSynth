@@ -50,6 +50,9 @@ private:
     //Function for finding and returning the place of the free voice 
     int findFreeVoice();
     
+    //Temp Buffer Initalise once use multiple times
+    juce::AudioBuffer<float> tempBuffer; 
+    
     //Functions for performing the forward and Inverse FFTs to build an array of bandlimited sample arrays
     std::array<float ,SynthRange::fullSizeTable> computeForwardFFT(std::array<float, SynthRange::fullSizeTable > wavetable);
     std::array<float, SynthRange::wavetableSamples> computeInverseFFT(std::array<float, SynthRange::fullSizeTable> wavetable , float highestFundamentalFreq);

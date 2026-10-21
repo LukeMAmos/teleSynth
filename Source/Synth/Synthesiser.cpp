@@ -13,19 +13,20 @@ SliderSynthesiser::SliderSynthesiser(){
     setADSR(adsrParams);
     
     //Fill on initalisation with a saw Wave
-    auto generatedWave = SynthRange::generateSaw(SynthRange::wavetableSamples, (int)((SynthRange::wavetableSamples)/(2.0f)));
-    std::copy(generatedWave.begin(), generatedWave.end(), fullSizeWavetableSamples);
+    auto generatedWave = SynthRange::generateSaw(SynthRange::wavetableSamples, (int)(SynthRange::wavetableSamples));
+    std::copy(generatedWave.begin(), generatedWave.end(), fullSizeWavetableSamples.begin());
 }
 
 void SliderSynthesiser::initaliseVoices(double sampleRateIn , int samplesPerBlock , int numChannels){
     
-    for(auto& voice : sliderVoices){
-        
-        voice.initaliseVoice(sampleRate, samplesPerBlock, numChannels); 
-        
-    }
+    tempBuffer.setSize(numChannels, samplesPerBlock);
     
     this->sampleRate = sampleRateIn;
+    
+    for(auto& voice : sliderVoices){
+        
+        voice.initaliseVoice(sampleRate, samplesPerBlock, numChannels);
+    }
     //Initalised the wave to be a saw wave and now need to compute the mipmap waves
     setAllMipmapTables();
     
@@ -34,7 +35,7 @@ void SliderSynthesiser::startNote(float frequency, float velocity , int touch){
     
     //find a free voice , then use the position of the free voice to call start note on the voice 
     int freeVoice = findFreeVoice();
-    if(freeVoice < 0 || freeVoice > SynthRange::maxVoices )
+    if(freeVoice < 0 || freeVoice >= SynthRange::maxVoices )
         //No free voices available 
         return;
     
@@ -85,13 +86,11 @@ void SliderSynthesiser::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, 
     
     juce::ScopedNoDenormals noDenormals;
     
-    juce::AudioBuffer<float> tempBuffer(outputBuffer.getNumChannels() , numSamples);
     
     for(int voice = 0 ; voice < SynthRange::maxVoices ; voice++){
         
         if(sliderVoices[voice].isActive()){
             
-            //DBG("Currently playing" + juce::String(voice));
             
             tempBuffer.clear();
             sliderVoices[voice].renderNextBlock(tempBuffer, startSample, numSamples);
@@ -152,9 +151,15 @@ void SliderSynthesiser::setAllMipmapTables(){
     //Then take the results and compute an inverse for each octave
     for(int table = 0; table < SynthRange::nMinMapTables; table++){
         //So for each table need to calculate the max frequency inside the octave, then use this to bandlimit the inverse FFT
-        float highestFreq = (SynthRange::freqMax) * (std::pow(0.5f, 3.0f));
+        float highestFreq = (SynthRange::freqMin) * std::pow(2.0f, (float)(table + 1));
         
         minMapTables[(size_t)table] = computeInverseFFT(forwardFFTResults, highestFreq);
+    }
+    //And then update the location of the minmapTables for each of the voices
+    
+    for(auto& voice : sliderVoices){
+        
+        voice.setMinMapTables(&minMapTables); 
     }
     
 }
@@ -180,7 +185,7 @@ std::array<float, SynthRange::wavetableSamples> SliderSynthesiser::computeInvers
     int maxHarmonic = (int)std::floor(sampleRate / (2 * highestFundamentalFreq));
     
     //Calculate the bin position to start cutting off at and zero those bins
-    int binZeroStart = maxHarmonic + 1 ;
+    int binZeroStart = (maxHarmonic + 1) * 2 ;
     std::fill(wavetable.begin() + binZeroStart, wavetable.end(), 0);
     
     //Take the wavetable and perform the inverse FFT
