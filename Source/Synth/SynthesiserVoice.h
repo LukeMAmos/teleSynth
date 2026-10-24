@@ -23,19 +23,12 @@ public:
     void setADSR(juce::ADSR::Parameters adsrParamsIn);
     bool isActive(); //Checks if the voice is still active
     
-    //Function for passing through pointer to minMapTables
-    void setMinMapTables(std::array<std::array<float, SynthRange::wavetableSamples > ,SynthRange::nMinMapTables >*  tableLocations);
-    
-    
 private:
     
     //Inital Implementation using a simple SineWave
     juce::ADSR ADSR;
     juce::ADSR::Parameters adsrParams;
     double sampleRate{0.0}; 
-    
-    //Pointer to the Synthesiser tables
-    std::array<std::array<float, SynthRange::wavetableSamples > ,SynthRange::nMinMapTables >* minMapTablesLocation = nullptr;
     
     //Varibles needed for ech synth voice
     std::atomic<bool> valueUpdateNeeded{false};

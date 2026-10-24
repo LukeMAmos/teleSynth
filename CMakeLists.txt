@@ -86,6 +86,8 @@ target_sources(teleSynth
     Source/Effects/Filter/BiquadFilter.h
     Source/Effects/Filter/BiquadFilter.cpp
     Source/Synth/SynthRange.h
+    Source/UI/WaveformViewer/WaveformViewer.h
+    Source/UI/WaveformViewer/WaveformViewer.cpp
 )
 
 
@@ -104,6 +106,12 @@ source_group("Source\\UI\\DraggableComponent" FILES
     Source/UI/DraggableComponent/DraggableComponent.cpp
     Source/UI/DraggableComponent/DraggableZone.h
     Source/UI/DraggableComponent/DraggableZone.cpp
+)
+
+source_group("Source\\UI\\WaveformViewer" FILES 
+    Source/UI/WaveformViewer/WaveformViewer.h
+    Source/UI/WaveformViewer/WaveformViewer.cpp
+
 )
 
 source_group("Source\\UI\\Sliders" FILES 

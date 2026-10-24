@@ -49,7 +49,8 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     juce::ScopedNoDenormals noDenormals;
     
     //Stop rendering if there are no current minmaps computed
-    if(minMapTablesLocation == nullptr)
+    const SynthRange::Tables* tables = SynthRange::liveTable.load(std::memory_order_acquire);
+    if(tables == nullptr)
         return;
     //update the values before they are used to render the next audio block
     //If Values need updating, otherwise skip block
@@ -63,14 +64,9 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     
     for(int i = startSample; i < startSample + numSamples; i++ ){
         
-        const int i0 = (int) std::floor(phase);
-        const int i1 = (int) (i0 + 1) % SynthRange::wavetableSamples;
-        const double frac = phase - (double)i0;
         
-        //Interpolating the value using linear interpolation
-        const float a = (*minMapTablesLocation)[(size_t)currentTable][(size_t)i0];
-        const float b = (*minMapTablesLocation)[(size_t)currentTable][(size_t)i1];
-        channelOne[i] = (float)(0.5f * (a + frac * (b-a)));
+        //Hermite interpolation
+        channelOne[i] = SynthRange::hermiteInterpolation(phase, (*tables)[(size_t)currentTable]);
         
         //Increment phase
         phase += phaseIncre;
@@ -99,7 +95,4 @@ bool SliderSynthVoice::isActive(){
     return ADSR.isActive();
 }
 
-void SliderSynthVoice::setMinMapTables(std::array<std::array<float, SynthRange::wavetableSamples>, SynthRange::nMinMapTables> *tableLocations){
-    
-    minMapTablesLocation = tableLocations; 
-}
+

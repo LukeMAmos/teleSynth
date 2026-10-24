@@ -148,19 +148,18 @@ void SliderSynthesiser::setAllMipmapTables(){
     //Calls the forwardFFT saves the result to results array
     forwardFFTResults = computeForwardFFT(fullSizeWavetableSamples);
     
+    const SynthRange::Tables* live = SynthRange::liveTable.load(std::memory_order_acquire);
+    SynthRange::Tables& spare = (live == &SynthRange::tablesA) ? SynthRange::tablesB : SynthRange::tablesA; //Find the spare table
+    
     //Then take the results and compute an inverse for each octave
     for(int table = 0; table < SynthRange::nMinMapTables; table++){
         //So for each table need to calculate the max frequency inside the octave, then use this to bandlimit the inverse FFT
         float highestFreq = (SynthRange::freqMin) * std::pow(2.0f, (float)(table + 1));
         
-        minMapTables[(size_t)table] = computeInverseFFT(forwardFFTResults, highestFreq);
+        spare[(size_t)table] = computeInverseFFT(forwardFFTResults, highestFreq);
     }
-    //And then update the location of the minmapTables for each of the voices
-    
-    for(auto& voice : sliderVoices){
-        
-        voice.setMinMapTables(&minMapTables); 
-    }
+    //and then store the data
+    SynthRange::liveTable.store(&spare , std::memory_order_release); 
     
 }
 

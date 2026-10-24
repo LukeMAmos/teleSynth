@@ -26,7 +26,6 @@ public:
     //Calls the private FFT functions and fills the array of mipmap tables
     void setAllMipmapTables();
     
-    //Called by the voices to calculate which index in the array to use to playback
     
 private:
     
@@ -39,9 +38,7 @@ private:
     std::array<float, SynthRange::fullSizeTable> fullSizeWavetableSamples;
     std::array<float, SynthRange::fullSizeTable> forwardFFTResults;
     
-    //Final Samples
-    std::array<std::array<float, SynthRange::wavetableSamples > ,SynthRange::nMinMapTables > minMapTables;
-    
+
     //Array of Voices
     SliderSynthVoice sliderVoices[SynthRange::maxVoices];
     //Array to hold which touch is linked to which voice, the position is the voice and the index is the Touch

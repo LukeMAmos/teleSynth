@@ -5,6 +5,7 @@
 #include "UI/ThemeColours.h"
 #include "UI/Buttons/SwitchScreen.h"
 #include "UI/adsrSlider/adsrSlider.h"
+#include "UI/WaveformViewer/WaveformViewer.h"
 
 //Forward declaration
 class teleSynthAudioProcessorEditor;
@@ -19,6 +20,7 @@ public:
     MainPage(teleSynthAudioProcessor& p): audioProcessor(p){
         
         addAndMakeVisible(draggableZone);
+        addAndMakeVisible(waveformViewer);
         
         draggableZone.setStartFunction(audioProcessor.getSynthStartNote());
         draggableZone.setMoveFunction(audioProcessor.getSynthMoveNote());
@@ -27,8 +29,19 @@ public:
     
     void resized() override {
         auto fullBounds = getBounds().reduced(5, 15);
-        draggableZone.setBounds(fullBounds.removeFromBottom((int)(getHeight() * 0.6f)));
         
+        //Bottom area used by the draggable Zone
+        auto bottomArea = fullBounds.removeFromBottom((int)(getHeight() * 0.6f));
+        draggableZone.setBounds(bottomArea);
+
+        const int dialThickness = 100;
+        
+        //Top and left areas are for dials and buttons
+        auto topArea = fullBounds.removeFromTop(dialThickness);
+        auto leftArea = fullBounds.removeFromLeft(dialThickness);
+        
+        //Waveform fills the remaining area
+        waveformViewer.setBounds(fullBounds.reduced(5));
         
     }
     
@@ -36,8 +49,10 @@ private:
     
     teleSynthAudioProcessor& audioProcessor;
     
+    //UI Components
     DraggableZone draggableZone;
     DotSlider dotSlider;
+    WaveformViewer waveformViewer;
     
 };
 
