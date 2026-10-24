@@ -3,7 +3,7 @@
 #include "Synth/Synthesiser.h"
 #include "Synth/SynthRange.h"
 #include "FIFO/WaveformFIFO.h"
-
+#include "EffectsProcessor/EffectsProcess.h"
 
 class teleSynthAudioProcessor : public juce::AudioProcessor
 {

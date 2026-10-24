@@ -91,7 +91,8 @@ target_sources(teleSynth
     Source/FIFO/WaveformFIFO.h
     Source/Effects/EffectsProcessor/EffectsProcess.h
     Source/Effects/EffectsProcessor/EffectsProcess.cpp
-	
+    Source/UI/WavetableEditor/WaveEditor.cpp
+    Source/UI/WavetableEditor/WaveEditor.h
 )
 
 
@@ -116,6 +117,11 @@ source_group("Source\\UI\\WaveformViewer" FILES
     Source/UI/WaveformViewer/WaveformViewer.h
     Source/UI/WaveformViewer/WaveformViewer.cpp
 
+)
+
+source_group("Source\\UI\\WavetableEditor" FILES
+    Source/UI/WavetableEditor/WaveEditor.cpp
+    Source/UI/WavetableEditor/WaveEditor.h
 )
 
 source_group("Source\\UI\\Sliders" FILES 
