@@ -88,6 +88,7 @@ target_sources(teleSynth
     Source/Synth/SynthRange.h
     Source/UI/WaveformViewer/WaveformViewer.h
     Source/UI/WaveformViewer/WaveformViewer.cpp
+    Source/FIFO/WaveformFIFO.h
 )
 
 
@@ -153,6 +154,9 @@ source_group("Source\\Synth" FILES
     Source/Synth/SynthRange.h
 )
 
+source_group("Source\\FIFO" FILES
+    Source/FIFO/WaveformFIFO.h
+)
 
 target_compile_definitions(teleSynth
     PRIVATE

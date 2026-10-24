@@ -12,11 +12,11 @@ public:
     void paint(juce::Graphics& g )override;
     void resized() override;
     
-    
+    void setSamples(juce::AudioBuffer<float>& buffer);
     
 private:
     
-    std::array<float , 512> displaySamples; 
+    juce::AudioBuffer<float> displaySamples;
     
     
     

@@ -32,6 +32,7 @@ void teleSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     
     sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples());
     
+    
 }
 
 //==============================================================================
