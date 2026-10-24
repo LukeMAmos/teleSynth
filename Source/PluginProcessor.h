@@ -2,6 +2,7 @@
 #include <JuceHeader.h>
 #include "Synth/Synthesiser.h"
 #include "Synth/SynthRange.h"
+#include "FIFO/WaveformFIFO.h"
 
 
 class teleSynthAudioProcessor : public juce::AudioProcessor
@@ -52,12 +53,14 @@ public:
     std::function<void(float x, float y , int touch)> getSynthMoveNote();
     std::function<void(juce::ADSR::Parameters adsrParams)> getAdsrUpdate();
     
-    
+    //Get the wavefifo , editor uses this
+    WaveFIFO& getWaveFifo() {return waveFifo;}
 private:
     
     SliderSynthesiser sliderSynthesiser;
-
-
+    //FIFO for feeding data into the waveform viewer 
+    WaveFIFO waveFifo;
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessor)
 

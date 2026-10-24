@@ -12,12 +12,12 @@ public:
     void paint(juce::Graphics& g )override;
     void resized() override;
     
-    void setSamples(juce::AudioBuffer<float>& buffer);
+    void setSamples(const float* data , int numSamples);
     
 private:
     
-    juce::AudioBuffer<float> displaySamples;
+    std::vector<float> displaySamples;
     
-    
-    
+    //take the sample value and then calculate the height of the line in pixels
+    int sampleToLength(float sample); 
 };

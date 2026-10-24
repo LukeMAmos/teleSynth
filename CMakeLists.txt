@@ -89,6 +89,9 @@ target_sources(teleSynth
     Source/UI/WaveformViewer/WaveformViewer.h
     Source/UI/WaveformViewer/WaveformViewer.cpp
     Source/FIFO/WaveformFIFO.h
+    Source/Effects/EffectsProcessor/EffectsProcess.h
+    Source/Effects/EffectsProcessor/EffectsProcess.cpp
+	
 )
 
 
@@ -139,6 +142,11 @@ source_group("Source\\UI" FILES
 source_group("Source\\UI\\Menus" FILES
     Source/UI/Menus/FilterMenu.h
     Source/UI/Menus/FilterMenu.cpp
+)
+
+source_group("Source\\Effects\\EffectsProcessor" FILES
+    Source/Effects/EffectsProcessor/EffectsProcess.h
+    Source/Effects/EffectsProcessor/EffectsProcess.cpp
 )
 
 source_group("Source\\Effects\\Filter" FILES

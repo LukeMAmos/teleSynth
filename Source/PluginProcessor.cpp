@@ -32,7 +32,9 @@ void teleSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     
     sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples());
     
-    
+    //Push data into the waveFifo, used ot draw the output 
+    if(buffer.getNumChannels() > 0)
+        waveFifo.push(buffer.getReadPointer(0), buffer.getNumSamples());
 }
 
 //==============================================================================

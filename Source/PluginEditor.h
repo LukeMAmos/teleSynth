@@ -37,14 +37,18 @@ public:
         const int dialThickness = 100;
         
         //Top and left areas are for dials and buttons
-        auto topArea = fullBounds.removeFromTop(dialThickness);
-        auto leftArea = fullBounds.removeFromLeft(dialThickness);
+        auto topArea = fullBounds.removeFromTop(dialThickness + 50);
+        auto leftArea = fullBounds.removeFromLeft(dialThickness + 15);
         
         //Waveform fills the remaining area
         waveformViewer.setBounds(fullBounds.reduced(5));
         
     }
     
+    //Allows the audio processor to call the function 
+    void setWaveformSamples(const float* data , int numSamples){
+        waveformViewer.setSamples(data , numSamples);
+    }
 private:
     
     teleSynthAudioProcessor& audioProcessor;
@@ -82,7 +86,7 @@ private:
 };
 
 
-class teleSynthAudioProcessorEditor  : public juce::AudioProcessorEditor
+class teleSynthAudioProcessorEditor  : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
     teleSynthAudioProcessorEditor (teleSynthAudioProcessor& p);
@@ -93,6 +97,9 @@ public:
     void resized() override;
 
     void switchPage();
+    
+    //Timer Callback to update data for drawing
+    void timerCallback() override;
     
 private:
     
@@ -109,6 +116,8 @@ private:
     //Menu Page
     std::unique_ptr<MenuPage> menuPage;
     
+    std::vector<float> scratch; //all the FIFO
+    std::vector<float> history; // the data that actually gets shown 
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessorEditor)
