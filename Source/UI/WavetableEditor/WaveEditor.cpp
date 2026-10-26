@@ -2,6 +2,7 @@
 
 WaveEditor::WaveEditor(){
     
+    drawingBounds = getBounds().reduced(5);
     
 }
 
@@ -26,7 +27,7 @@ void WaveEditor::paint(juce::Graphics &g){
 
 void WaveEditor::resized(){
     
-    drawingBounds = getLocalBounds().reduced(5); 
+    drawingBounds = getLocalBounds().reduced(5);
     
 }
 
@@ -34,7 +35,9 @@ void WaveEditor::resized(){
 void WaveEditor::mouseDown (const juce::MouseEvent& event){
     
     wavePath.clear();
-    wavePath.startNewSubPath(event.position);
+    
+    previousPoint = limitDrawing(event.position, true);
+    wavePath.startNewSubPath(previousPoint);
     
     repaint();
 }
@@ -42,7 +45,8 @@ void WaveEditor::mouseDown (const juce::MouseEvent& event){
 
 void WaveEditor::mouseDrag (const juce::MouseEvent& event){
     
-    wavePath.lineTo(event.position);
+    previousPoint = limitDrawing(event.position, false);
+    wavePath.lineTo(previousPoint);
     
     repaint();
 }
@@ -50,5 +54,19 @@ void WaveEditor::mouseDrag (const juce::MouseEvent& event){
 
 void WaveEditor::mouseUp   (const juce::MouseEvent& event){
     
+    //Need wrap the data points and pass them through to be analysed by the mipmapping 
     
+}
+
+
+juce::Point<float> WaveEditor::limitDrawing(juce::Point<float> drawingPoint, bool newLine){
+    
+    auto limX = juce::jlimit((float)drawingBounds.getX(), (float)drawingBounds.getRight(), (float)drawingPoint.getX());
+    auto limY = juce::jlimit((float)drawingBounds.getY(), (float)drawingBounds.getBottom(), (float)drawingPoint.getY());
+    
+    //Dont return new point if its not going forward
+    if(limX < previousPoint.getX() && !newLine){
+        return previousPoint;
+    }
+    return {limX , limY};
 }

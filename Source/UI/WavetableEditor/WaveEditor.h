@@ -19,7 +19,9 @@ private:
     
     //Drawing path
     juce::Path wavePath;
+    //Bounds to keep the drawing inside of, holding previous positon to ensure the wave is a legal wave only goes forward
+    juce::Rectangle<int> drawingBounds;
+    juce::Point<float> previousPoint; 
     
-    //Bounds to keep the drawing inside of
-    juce::Rectange<int> drawingBounds;
+    juce::Point<float> limitDrawing(juce::Point<float> drawingPoint , bool newLine); 
 };
