@@ -6,6 +6,7 @@
 #include "UI/Buttons/SwitchScreen.h"
 #include "UI/adsrSlider/adsrSlider.h"
 #include "UI/WaveformViewer/WaveformViewer.h"
+#include "UI/WavetableEditor/WaveEditor.h"
 
 //Forward declaration
 class teleSynthAudioProcessorEditor;
@@ -68,7 +69,9 @@ public:
     MenuPage(teleSynthAudioProcessor& p): audioProcessor(p){
         
         addAndMakeVisible(adsrSlider);
-        adsrSlider.setCallOnChange(audioProcessor.getAdsrUpdate()); 
+        adsrSlider.setCallOnChange(audioProcessor.getAdsrUpdate());
+        
+        addAndMakeVisible(waveEditor);
         
         
     }
@@ -76,12 +79,14 @@ public:
         
         adsrSlider.setBounds(125, 50, 250, 150); 
         
+        waveEditor.setBounds(50, 300, getWidth() - 100 , (int)(getHeight() * 0.25f));
     }
     
 private:
     
     teleSynthAudioProcessor& audioProcessor;
-    AdsrSlider adsrSlider; 
+    AdsrSlider adsrSlider;
+    WaveEditor waveEditor;
     
 };
 
