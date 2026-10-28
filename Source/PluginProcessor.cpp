@@ -134,5 +134,8 @@ std::function<void(juce::ADSR::Parameters adsrParams)> teleSynthAudioProcessor::
 }
 
 
-
+SliderSynthesiser& teleSynthAudioProcessor::getSliderSynthesiser(){
+    
+    return sliderSynthesiser; 
+}
 

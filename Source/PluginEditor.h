@@ -72,7 +72,12 @@ public:
         adsrSlider.setCallOnChange(audioProcessor.getAdsrUpdate());
         
         addAndMakeVisible(waveEditor);
-        
+        waveEditor.setWaveComplete([this](const std::array<float, SynthRange::wavetableSamples>& samples){
+            
+            auto& synth = audioProcessor.getSliderSynthesiser();
+            synth.setWavetableSamples(std::vector<float>(samples.begin() , samples.end()));
+            synth.setAllMipmapTables(); 
+        });
         
     }
     void resized() override {

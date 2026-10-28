@@ -55,6 +55,10 @@ public:
     
     //Get the wavefifo , editor uses this
     WaveFIFO& getWaveFifo() {return waveFifo;}
+    
+    //get synth
+    
+    SliderSynthesiser& getSliderSynthesiser(); 
 private:
     
     SliderSynthesiser sliderSynthesiser;
