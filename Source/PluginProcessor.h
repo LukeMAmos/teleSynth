@@ -62,9 +62,12 @@ public:
 private:
     
     SliderSynthesiser sliderSynthesiser;
-    //FIFO for feeding data into the waveform viewer 
+    
+    //FIFO for feeding data into the waveform viewer
     WaveFIFO waveFifo;
     
+    //Effects processor
+    EffectsProcessor effectsProcessor; 
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (teleSynthAudioProcessor)
 

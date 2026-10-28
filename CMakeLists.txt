@@ -17,6 +17,7 @@ else()
     set(teleSynth_FORMATS AU VST3 Standalone)
 endif()
 
+set(ICON "${CMAKE_CURRENT_SOURCE_DIR}/Assets/teleSynthICON-iOS-Dark-1024x1024@1x.png")
 
 juce_add_plugin(teleSynth
 	COMPANY_NAME                "Luke Amos"
@@ -30,6 +31,8 @@ juce_add_plugin(teleSynth
     PLUGIN_CODE                 tesy
     FORMATS                      ${teleSynth_FORMATS}
     PRODUCT_NAME                "teleSynth"
+    ICON_BIG                    "${ICON}"
+    ICON_SMALL                  "${ICON}"
 )
 
 if(IOS)
@@ -58,119 +61,18 @@ target_include_directories(teleSynth PRIVATE
     Source/Effects
 )
 
-target_sources(teleSynth
-    PRIVATE
-    Source/PluginProcessor.cpp
-    Source/PluginProcessor.h
-    Source/PluginEditor.cpp
-    Source/PluginEditor.h
-    Source/UI/DraggableComponent/DraggableComponent.h
-    Source/UI/DraggableComponent/DraggableComponent.cpp
-    Source/UI/DraggableComponent/DraggableZone.h
-    Source/UI/DraggableComponent/DraggableZone.cpp
-    Source/UI/Sliders/Slider.h
-    Source/UI/Sliders/Slider.cpp
-    Source/UI/Buttons/SwitchScreen.h
-    Source/UI/Buttons/SwitchScreen.cpp
-    Source/UI/ThemeColours.h
-    Source/Synth/Synthesiser.h
-    Source/Synth/Synthesiser.cpp
-    Source/Synth/SynthesiserVoice.h
-    Source/Synth/SynthesiserVoice.cpp
-    Source/UI/adsrSlider/adsrSlider.h
-    Source/UI/adsrSlider/adsrSlider.cpp
-    Source/UI/adsrSlider/adsrPoint.h
-    Source/UI/adsrSlider/adsrPoint.cpp
-    Source/UI/Menus/FilterMenu.h
-    Source/UI/Menus/FilterMenu.cpp
-    Source/Effects/Filter/BiquadFilter.h
-    Source/Effects/Filter/BiquadFilter.cpp
-    Source/Synth/SynthRange.h
-    Source/UI/WaveformViewer/WaveformViewer.h
-    Source/UI/WaveformViewer/WaveformViewer.cpp
-    Source/FIFO/WaveformFIFO.h
-    Source/Effects/EffectsProcessor/EffectsProcess.h
-    Source/Effects/EffectsProcessor/EffectsProcess.cpp
-    Source/UI/WavetableEditor/WaveEditor.cpp
-    Source/UI/WavetableEditor/WaveEditor.h
+file(GLOB_RECURSE TELESYNTH_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.h"
 )
 
+target_sources(teleSynth PRIVATE ${TELESYNTH_SOURCES})
 
+# Mirror the folder structure in the Xcode/IDE project tree
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+             PREFIX "Source"
+             FILES ${TELESYNTH_SOURCES})
 
-
-source_group("Source" FILES
-    Source/PluginProcessor.cpp
-    Source/PluginProcessor.h
-    Source/PluginEditor.cpp
-    Source/PluginEditor.h
-)
-
-
-source_group("Source\\UI\\DraggableComponent" FILES 
-    Source/UI/DraggableComponent/DraggableComponent.h
-    Source/UI/DraggableComponent/DraggableComponent.cpp
-    Source/UI/DraggableComponent/DraggableZone.h
-    Source/UI/DraggableComponent/DraggableZone.cpp
-)
-
-source_group("Source\\UI\\WaveformViewer" FILES 
-    Source/UI/WaveformViewer/WaveformViewer.h
-    Source/UI/WaveformViewer/WaveformViewer.cpp
-
-)
-
-source_group("Source\\UI\\WavetableEditor" FILES
-    Source/UI/WavetableEditor/WaveEditor.cpp
-    Source/UI/WavetableEditor/WaveEditor.h
-)
-
-source_group("Source\\UI\\Sliders" FILES 
-    Source/UI/Sliders/Slider.h
-    Source/UI/Sliders/Slider.cpp
-)
-
-source_group("Source\\UI\\Buttons" FILES 
-    Source/UI/Buttons/SwitchScreen.h
-    Source/UI/Buttons/SwitchScreen.cpp
-)
-
-source_group("Source\\UI\\adsrSlider" FILES 
-    Source/UI/adsrSlider/adsrSlider.h
-    Source/UI/adsrSlider/adsrSlider.cpp
-    Source/UI/adsrSlider/adsrPoint.h
-    Source/UI/adsrSlider/adsrPoint.cpp
-)
-
-source_group("Source\\UI" FILES 
-    Source/UI/ThemeColours.h
-)
-
-source_group("Source\\UI\\Menus" FILES
-    Source/UI/Menus/FilterMenu.h
-    Source/UI/Menus/FilterMenu.cpp
-)
-
-source_group("Source\\Effects\\EffectsProcessor" FILES
-    Source/Effects/EffectsProcessor/EffectsProcess.h
-    Source/Effects/EffectsProcessor/EffectsProcess.cpp
-)
-
-source_group("Source\\Effects\\Filter" FILES
-    Source/Effects/Filter/BiquadFilter.h
-    Source/Effects/Filter/BiquadFilter.cpp
-)
-
-source_group("Source\\Synth" FILES 
-    Source/Synth/Synthesiser.h
-    Source/Synth/Synthesiser.cpp
-    Source/Synth/SynthesiserVoice.h
-    Source/Synth/SynthesiserVoice.cpp
-    Source/Synth/SynthRange.h
-)
-
-source_group("Source\\FIFO" FILES
-    Source/FIFO/WaveformFIFO.h
-)
 
 target_compile_definitions(teleSynth
     PRIVATE

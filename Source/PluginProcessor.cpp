@@ -13,6 +13,7 @@ teleSynthAudioProcessor::~teleSynthAudioProcessor() {}
 void teleSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     
     sliderSynthesiser.initaliseVoices(sampleRate, samplesPerBlock, getNumOutputChannels());
+    effectsProcessor.prepare(sampleRate);
     
     
 }
@@ -31,6 +32,8 @@ void teleSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     buffer.clear();
     
     sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples());
+    
+    effectsProcessor.processEffects(buffer); 
     
     //Push data into the waveFifo, used ot draw the output 
     if(buffer.getNumChannels() > 0)

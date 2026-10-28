@@ -8,11 +8,17 @@ class EffectsProcessor{
     
 public:
     
-    void processEffects(juce::AudioBuffer<float>& buffer); 
+    void prepare(double sampleRateIn);
+    
+    void processEffects(juce::AudioBuffer<float>& buffer);
+    
+    void setParameters();
     
 private:
     
     //Effects Objects
     juce::Reverb reverb;
+    BiquadFilter biquadFilter; 
+    
     
 };
