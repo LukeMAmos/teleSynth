@@ -33,7 +33,9 @@ void teleSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     
     sliderSynthesiser.renderNextBlock(buffer, 0, buffer.getNumSamples());
     
-    effectsProcessor.processEffects(buffer); 
+    effectsProcessor.processEffects(buffer);
+    
+    
     
     //Push data into the waveFifo, used ot draw the output 
     if(buffer.getNumChannels() > 0)
@@ -136,6 +138,11 @@ std::function<void(juce::ADSR::Parameters adsrParams)> teleSynthAudioProcessor::
     };
 }
 
+void teleSynthAudioProcessor::updateEfProcessValue(float value){
+    
+    effectsProcessor.setLinearEffectControl(value); 
+    
+}
 
 SliderSynthesiser& teleSynthAudioProcessor::getSliderSynthesiser(){
     

@@ -12,13 +12,13 @@ public:
     
     void processEffects(juce::AudioBuffer<float>& buffer);
     
-    void setParameters();
+    void setLinearEffectControl(float sliderValue);
     
 private:
     
     //Effects Objects
     juce::Reverb reverb;
-    BiquadFilter biquadFilter; 
+    BiquadFilter biquadFilters[2]; 
     
     
 };

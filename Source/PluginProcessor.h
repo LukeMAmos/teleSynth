@@ -53,6 +53,10 @@ public:
     std::function<void(float x, float y , int touch)> getSynthMoveNote();
     std::function<void(juce::ADSR::Parameters adsrParams)> getAdsrUpdate();
     
+    //Takes a value from 0 to 1 to then update the most recently clicked effect 
+    void updateEfProcessValue(float value);
+    
+    
     //Get the wavefifo , editor uses this
     WaveFIFO& getWaveFifo() {return waveFifo;}
     

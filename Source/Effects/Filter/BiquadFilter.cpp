@@ -9,13 +9,18 @@ void BiquadFilter::prepare(double sampleRateIn){
     x1 = x2 = 0.0f;
     y1 = y2 = 0.0f;
     
+    //Inital params
+    setParameters(20000.0f, std::sqrt(0.5f), lowpass);
 }
 
-void BiquadFilter::setParameters(float cutoffFreqIn , float resonanceIn , FilterTypeBiquad filterTypeIn){
+void BiquadFilter::setParameters(double cutoffFreqIn , double resonanceIn , FilterTypeBiquad filterTypeIn){
+    
+    if(sampleRate < 0.0f)
+        return;
     
     filterType = filterTypeIn;
-    resonance = std::max(resonanceIn , (float)std::sqrt(0.5f));
-    cutoffFrequency = juce::jlimit(0.0f , (sampleRate * 0.5f), cutoffFreqIn);
+    resonance = std::max(resonanceIn , (double)std::sqrt(0.5));
+    cutoffFrequency = juce::jlimit(0.0 , (sampleRate * 0.5), cutoffFreqIn);
     
     theta = (( 2.0f * juce::MathConstants<float>::pi * cutoffFrequency ) / sampleRate);
     
@@ -64,7 +69,7 @@ float BiquadFilter::process(float input){
     //y(n) = a0 x(n) + a1 (n-1) + a2 (x-2) - b1 y(n-1) - b2 y(n-2)
     //Filter coeffients are calculated from cutoff , resonance and sampleRate, a biquad filter can act as both a lowpass and a highpass filter dependant on the input values
     
-    float output = a0 * input +a1 * x1 +a2 * x2 -b1 * y1 - b2 * y2;
+    double output = a0 * input +a1 * x1 +a2 * x2 -b1 * y1 - b2 * y2;
     
     x2 = x1;
     x1 = input;
@@ -72,7 +77,13 @@ float BiquadFilter::process(float input){
     y2 = y1;
     y1 = output;
     
-    return output;
+    return (float)output;
 }
     
 
+void BiquadFilter::setCutoff(float cutoffFreqIn){
+    //Update just the cutoff, function used for the main page linear slider
+    cutoffFrequency = cutoffFreqIn;
+    
+    setParameters(cutoffFrequency, resonance, filterType); 
+}

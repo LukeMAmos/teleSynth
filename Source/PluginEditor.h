@@ -7,6 +7,7 @@
 #include "UI/adsrSlider/adsrSlider.h"
 #include "UI/WaveformViewer/WaveformViewer.h"
 #include "UI/WavetableEditor/WaveEditor.h"
+#include "UI/Sliders/SliderLinear.h"
 
 //Forward declaration
 class teleSynthAudioProcessorEditor;
@@ -22,14 +23,24 @@ public:
         
         addAndMakeVisible(draggableZone);
         addAndMakeVisible(waveformViewer);
+        addAndMakeVisible(linearSlider);
         
         draggableZone.setStartFunction(audioProcessor.getSynthStartNote());
         draggableZone.setMoveFunction(audioProcessor.getSynthMoveNote());
         draggableZone.setEndFunction(audioProcessor.getSynthStopNote());
+        
+        linearSlider.onValueChange = [this](){
+            audioProcessor.updateEfProcessValue((float)linearSlider.getValue());
+            DBG("Updated");
+        };
+        
+        linearSlider.setRange(0.0, 1.0);
+        linearSlider.setValue(1.0);
+        
     }
     
     void resized() override {
-        auto fullBounds = getBounds().reduced(5, 15);
+        auto fullBounds = getBounds().reduced(5, 25);
         
         //Bottom area used by the draggable Zone
         auto bottomArea = fullBounds.removeFromBottom((int)(getHeight() * 0.6f));
@@ -38,7 +49,10 @@ public:
         const int dialThickness = 100;
         
         //Top and left areas are for dials and buttons
-        auto topArea = fullBounds.removeFromTop(dialThickness + 50);
+        auto topArea = fullBounds.removeFromTop(dialThickness + 50).removeFromRight(getWidth() - dialThickness);
+        topArea = topArea.withTrimmedTop(20).withTrimmedLeft(20);  
+        linearSlider.setBounds(topArea);
+        
         auto leftArea = fullBounds.removeFromLeft(dialThickness + 15);
         
         //Waveform fills the remaining area
@@ -50,14 +64,16 @@ public:
     void setWaveformSamples(const float* data , int numSamples){
         waveformViewer.setSamples(data , numSamples);
     }
+    
 private:
     
     teleSynthAudioProcessor& audioProcessor;
     
     //UI Components
     DraggableZone draggableZone;
-    DotSlider dotSlider;
+    LinearSlider linearSlider; //Slider used to control effects
     WaveformViewer waveformViewer;
+    
     
 };
 

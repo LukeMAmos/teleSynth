@@ -15,9 +15,10 @@ class BiquadFilter{
 public:
     
     void prepare(double sampleRateIn);
-    void setParameters(float cutoffFreqIn , float resonanceIn , FilterTypeBiquad filterTypeIn);
+    void setParameters(double cutoffFreqIn , double resonanceIn , FilterTypeBiquad filterTypeIn);
     float process(float input);
     
+    void setCutoff(float cutoffFreqIn); 
 private:
     
     //For a biquad filter need to know maximum 2 samples prior
@@ -27,19 +28,19 @@ private:
     float y1 = 0.0f;
     float y2 = 0.0f;
     
-    FilterTypeBiquad filterType; //Select between lowpass and highPassFilter, flipped signs on highpassfilter
-    float sampleRate;
-    float cutoffFrequency; //Fc
-    float resonance; //(Q)
+    FilterTypeBiquad filterType = lowpass; //Select between lowpass and highPassFilter, flipped signs on highpassfilter
+    double sampleRate = 44100.0;
+    double cutoffFrequency = 200.0; //Fc
+    double resonance = 0.7071; //(Q)
     
     //Filter Coefficients and variables for calculating
-    float a0 = 0.0f;
-    float a1 = 0.0f;
-    float a2 = 0.0f;
+    double a0 = 0.0f;
+    double a1 = 0.0f;
+    double a2 = 0.0f;
     
-    float b1 = 0.0f;
-    float b2 = 0.0f;
+    double b1 = 0.0f;
+    double b2 = 0.0f;
     
-    float theta = 0.0f;
+    double theta = 0.0f;
     
 };

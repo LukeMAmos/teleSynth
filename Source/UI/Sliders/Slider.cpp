@@ -18,24 +18,24 @@ void DotSlider::paint(juce::Graphics &g){
     auto wholeBounds = getLocalBounds().reduced(5);
     g.setColour(ThemeColours::black());
     g.fillRoundedRectangle(wholeBounds.getX(), wholeBounds.getY(), wholeBounds.getWidth(), wholeBounds.getHeight(), 8);
-    
+
     float SliderPos = (float)((getValue() - getMinimum())/(getMaximum() - getMinimum()));
-    
+
     //Get the start and end angle of the rotary slider to use to calculate the angle step inbetween each of the dots
     float rotaryStartAngle = getRotaryParameters().startAngleRadians;
     float rotaryEndAngle = getRotaryParameters().endAngleRadians;
-    
+
     //sweep from bottom in an aniclockwise motion
     auto angleStep = (rotaryStartAngle - rotaryEndAngle) / 10.0f;
     auto radius = juce::jmin(wholeBounds.getWidth(), wholeBounds.getHeight()) / 2;
-    
+
     //Calculate the dot width and use to set the path of the dots
     auto dotWidth = juce::jmin(8.0f, radius * 0.5f);
     auto dotPath = radius - dotWidth * 0.5f;
-    
+
     //The max dot for this slider, this is used to decide the brightness of the dots that come before and after
     int maxDotPosition = (int)(SliderPos * 10.0f);
-    
+
     //Drawing the dots
     for(int i = 0; i < 10 ; i++){
         
@@ -58,3 +58,5 @@ void DotSlider::paint(juce::Graphics &g){
     }
     
 }
+
+
