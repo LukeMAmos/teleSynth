@@ -27,7 +27,6 @@ void SliderSynthVoice::startNote(float freqeuncy, float velocity){
     phase = 0.0;
     targetFreq = freqeuncy;
     targetVelocity = velocity;
-    valueUpdateNeeded = true;
     ADSR.noteOn();
 }
 
@@ -39,7 +38,7 @@ void SliderSynthVoice::stopNote(){
 void SliderSynthVoice::updateValues(float frequency , float velocity){
     
     //Save the values and set the update flag to true
-    valueUpdateNeeded = true;
+
     targetVelocity = velocity;
     targetFreq = frequency;
 }
@@ -48,25 +47,30 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
     
     juce::ScopedNoDenormals noDenormals;
     
+    const float frequency = targetFreq.load();
+    const float velocity = targetVelocity.load();
     //Stop rendering if there are no current minmaps computed
     const SynthRange::Tables* tables = SynthRange::liveTable.load(std::memory_order_acquire);
     if(tables == nullptr)
         return;
     //update the values before they are used to render the next audio block
     //If Values need updating, otherwise skip block
-    if(valueUpdateNeeded){
-        currentTable = SynthRange::calcTableIndex(targetFreq.load()); //Calculate the table needed based on the current frequency playing
-        valueUpdateNeeded = false;
-        phaseIncre = ((targetFreq.load() * SynthRange::wavetableSamples) / (sampleRate)); 
-    }
+    
+    auto tableVals = SynthRange::calcTableIndex(targetFreq.load()); //Calculate the table needed based on the current frequency playing
+    currentTable = tableVals.CurrentTable;
+    phaseIncre = ((targetFreq.load() * SynthRange::wavetableSamples) / (sampleRate));
+    
     //For each of the samples by interpolating between the sample positions
     auto* channelOne = outputBuffer.getWritePointer(0);
     
     for(int i = startSample; i < startSample + numSamples; i++ ){
         
-        
+        //Need to get the value for the current table and then the value for the next table and multiple by thier mix amounts
+        //Below are both sample values
+        auto current = SynthRange::hermiteInterpolation(phase, (*tables)[(size_t)currentTable]) * (1.0f - tableVals.mix);
+        auto next = SynthRange::hermiteInterpolation(phase, (*tables)[(size_t)tableVals.NextTable]) * (tableVals.mix);
         //Hermite interpolation
-        channelOne[i] = SynthRange::hermiteInterpolation(phase, (*tables)[(size_t)currentTable]);
+        channelOne[i] = current + next; 
         
         //Increment phase
         phase += phaseIncre;
@@ -79,7 +83,7 @@ void SliderSynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, i
         outputBuffer.copyFrom(ch , startSample , outputBuffer ,0 , startSample , numSamples );
     
     ADSR.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
-    outputBuffer.applyGain(targetVelocity); 
+    outputBuffer.applyGain(startSample, numSamples , velocity); 
 }
 
 void SliderSynthVoice::setADSR(juce::ADSR::Parameters adsrParamsIn){

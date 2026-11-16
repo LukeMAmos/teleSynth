@@ -31,7 +31,6 @@ private:
     double sampleRate{0.0}; 
     
     //Varibles needed for ech synth voice
-    std::atomic<bool> valueUpdateNeeded{false};
     std::atomic<float> targetFreq{440.0f};
     std::atomic<float> targetVelocity{1.0f};
     double phase{0.0};

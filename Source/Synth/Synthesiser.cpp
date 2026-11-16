@@ -3,15 +3,7 @@
 SliderSynthesiser::SliderSynthesiser(){
     
     std::fill(std::begin(voiceToTouch), std::end(voiceToTouch), -1);
-    
-    //ADSR Paramters INIT
-    juce::ADSR::Parameters adsrParams;
-    adsrParams.attack = 0.8f;
-    adsrParams.decay = 0.2f;
-    adsrParams.sustain = 0.6f;
-    adsrParams.release = 0.5f;
-    setADSR(adsrParams);
-    
+        
     //Fill on initalisation with a saw Wave
     auto generatedWave = SynthRange::generateSaw(SynthRange::wavetableSamples, (int)(SynthRange::wavetableSamples));
     std::copy(generatedWave.begin(), generatedWave.end(), fullSizeWavetableSamples.begin());
@@ -27,6 +19,15 @@ void SliderSynthesiser::initaliseVoices(double sampleRateIn , int samplesPerBloc
         
         voice.initaliseVoice(sampleRate, samplesPerBlock, numChannels);
     }
+    
+    //ADSR Paramters INIT
+    juce::ADSR::Parameters adsrParams;
+    adsrParams.attack = 0.8f;
+    adsrParams.decay = 0.2f;
+    adsrParams.sustain = 0.6f;
+    adsrParams.release = 0.5f;
+    setADSR(adsrParams);
+    
     //Initalised the wave to be a saw wave and now need to compute the mipmap waves
     setAllMipmapTables();
     

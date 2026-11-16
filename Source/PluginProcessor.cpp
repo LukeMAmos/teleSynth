@@ -15,6 +15,7 @@ void teleSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     sliderSynthesiser.initaliseVoices(sampleRate, samplesPerBlock, getNumOutputChannels());
     effectsProcessor.prepare(sampleRate);
     
+    DBG( "Sample rate : "+ juce::String(sampleRate)); 
     
 }
 void teleSynthAudioProcessor::releaseResources() {

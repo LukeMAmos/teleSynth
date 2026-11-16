@@ -31,7 +31,6 @@ public:
         
         linearSlider.onValueChange = [this](){
             audioProcessor.updateEfProcessValue((float)linearSlider.getValue());
-            DBG("Updated");
         };
         
         linearSlider.setRange(0.0, 1.0);

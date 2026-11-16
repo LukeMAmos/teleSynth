@@ -11,9 +11,16 @@ namespace SynthRange {
     const int maxVoices = 5;
     const int wavetableSamples = 2048;
     const int fullSizeTable = wavetableSamples * 2;
-    const int nMinMapTables = 6; // which is 5 octaves between 50 and 2500 hertz frequency range
+    const int nMinMapTables = 6; // which is 5 octaves between 50 and 2500 hertz frequency range with the highest possible played frequency 32000
 
     using Tables = std::array<std::array<float , wavetableSamples>, nMinMapTables>;
+
+
+    struct TableVals{
+        int CurrentTable;
+        int NextTable;
+        float mix;
+    };
 
     //Final Samples, using two tables so that switching can happen whilst keeping the audio playing
     inline Tables tablesA{} , tablesB{};
@@ -25,13 +32,24 @@ namespace SynthRange {
     }
     
     //Take the frequency of the note and calculate the table that should be used
-    inline int calcTableIndex(float freq){
+    inline TableVals calcTableIndex(float freq){
         
-        int idx = (int) std::floor(std::log2(freq / freqMin));
-        return juce::jlimit(0, nMinMapTables-1 , idx); 
+        if(freq < 0 )
+            return {0 , 0 , 0.0f};
+        
+        //Double in freqency is moving to the next table
+        float position = (int) std::floor(std::log2(freq / freqMin)); //Raise 2 to what power to get the frequenc, the power is the table
+        
+        position = juce::jlimit(0.0f, (float)nMinMapTables-1 , position); //Curent table limited by the number of tables available
+        int current = (int)(std::floor(position));
+        
+        int next = juce::jmin(current+1 , nMinMapTables -1);
+        float mix = position - (float)current; //The amount you multiple the next value by, the inverse is teh amount you multiple the current table values by
+        
+        return {current , next , mix }; 
     }
 
-    //Saw wave generator, taking period in number of samples
+    //Saw wave generator, taking period in number of samples, This is used to initialse the wave in the application
     inline std::vector<float> generateSaw(int numSamples , int period){
         
         std::vector<float> wave((size_t)numSamples);
